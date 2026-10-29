@@ -132,8 +132,8 @@
   --frame: oklch(0.2 0.008 260);
   --overlay: oklch(0.23 0.008 260 / 30%);
 
-  --tag-gray: oklch(0.94 0.003 90);
-  --tag-gray-foreground: oklch(0.46 0.008 70);
+  --tag-gray: oklch(0.94 0.005 255);
+  --tag-gray-foreground: oklch(0.46 0.014 255);
   --tag-orange: oklch(0.945 0.03 65);
   --tag-orange-foreground: oklch(0.52 0.12 55);
   --tag-yellow: oklch(0.96 0.045 95);
@@ -147,9 +147,9 @@
   --tag-red: oklch(0.945 0.03 25);
   --tag-red-foreground: oklch(0.54 0.15 25);
 
-  --shadow-card: 0 1px 2px oklch(0.26 0.007 70 / 6%), 0 0 0 1px oklch(0.26 0.007 70 / 6%);
-  --shadow-sheet: 0 -12px 40px -12px oklch(0.26 0.007 70 / 25%);
-  --shadow-phone: 0 40px 80px -30px oklch(0.26 0.007 70 / 45%), 0 0 0 1px oklch(0.26 0.007 70 / 10%);
+  --shadow-card: 0 1px 2px oklch(0.23 0.008 260 / 6%), 0 0 0 1px oklch(0.23 0.008 260 / 6%);
+  --shadow-sheet: 0 -12px 40px -12px oklch(0.23 0.008 260 / 25%);
+  --shadow-phone: 0 40px 80px -30px oklch(0.23 0.008 260 / 45%), 0 0 0 1px oklch(0.23 0.008 260 / 10%);
 }
 
 .dark {
