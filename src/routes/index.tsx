@@ -19,7 +19,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <PhoneShell>
+    <PhoneShell statusTone="brand">
       <HomeScreen />
     </PhoneShell>
   );
