@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronRight, ChevronsUpDown, MoreHorizontal, Plus, SquarePen } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { MurdockAppIcon } from "@/components/proto/MurdockLogo";
 import {
   favorites,
   initialHabits,
@@ -21,10 +22,8 @@ export function HomeScreen() {
       {/* Topo */}
       <header className="sticky top-0 z-10 flex items-center justify-between bg-background/95 px-4 py-2.5 backdrop-blur">
         <button type="button" className="flex items-center gap-2 rounded-md px-1 py-1 hover:bg-accent">
-          <span className="flex size-6 items-center justify-center rounded bg-tag-orange text-xs font-semibold text-tag-orange-foreground">
-            G
-          </span>
-          <span className="text-[15px] font-semibold">Cérebro do Gabriel</span>
+          <MurdockAppIcon className="size-8" />
+          <span className="text-[15px] font-semibold">Murdock Assistent</span>
           <ChevronsUpDown className="size-3.5 text-muted-foreground" />
         </button>
         <div className="flex items-center gap-1 text-muted-foreground">
