@@ -65,27 +65,34 @@ export function TaskBoardScreen() {
   return (
     <div className="pb-6">
       {/* Topo */}
-      <header className="sticky top-0 z-10 flex items-center justify-between bg-background/95 px-3 py-2.5 backdrop-blur">
-        <Link to="/" className="flex items-center gap-1 rounded-md px-1 py-1 text-sm text-muted-foreground hover:bg-accent">
-          <ChevronLeft className="size-5" />
-          <span>Projetos</span>
-          <span className="px-0.5">/</span>
-          <span className="text-foreground">Tarefas</span>
+      <header className="sticky top-0 z-10 flex items-center justify-between bg-background/95 px-3 py-2 backdrop-blur">
+        <Link
+          to="/"
+          aria-label="Voltar para o início"
+          className="flex size-10 items-center justify-center rounded-full text-foreground hover:bg-surface"
+        >
+          <ChevronLeft className="size-6" />
         </Link>
-        <button type="button" aria-label="Mais opções" className="rounded-md p-1.5 text-muted-foreground hover:bg-accent">
+        <button
+          type="button"
+          aria-label="Mais opções"
+          className="flex size-10 items-center justify-center rounded-full text-foreground hover:bg-surface"
+        >
           <MoreHorizontal className="size-5" />
         </button>
       </header>
 
       {/* Título da página */}
       <section className="px-5 pt-3">
-        <span className="text-[44px] leading-none">✅</span>
-        <h1 className="mt-3 text-[28px] font-bold leading-tight tracking-tight">Tarefas</h1>
-        <p className="mt-1 text-[15px] text-muted-foreground">Tudo que precisa sair da cabeça.</p>
+        <p className="text-sm font-semibold text-muted-foreground">Projetos</p>
+        <h1 className="mt-1 text-[28px] font-bold leading-tight tracking-tight">Tarefas</h1>
+        <p className="mt-1 text-[15px] text-muted-foreground">
+          {tasks.filter((t) => t.status !== "done").length} pendentes · tudo que precisa sair da cabeça.
+        </p>
       </section>
 
       {/* Visualizações */}
-      <div className="mt-5 flex items-center gap-1 border-b border-border px-4">
+      <div className="mx-5 mt-5 flex items-center gap-1 rounded-full bg-surface p-1">
         {(
           [
             { id: "board", label: "Quadro", icon: Kanban },
@@ -97,10 +104,8 @@ export function TaskBoardScreen() {
             type="button"
             onClick={() => setView(v.id)}
             className={cn(
-              "-mb-px flex items-center gap-1.5 border-b-2 px-2 py-2 text-sm font-medium transition-colors",
-              view === v.id
-                ? "border-foreground text-foreground"
-                : "border-transparent text-muted-foreground hover:text-foreground",
+              "flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-sm font-semibold transition-colors",
+              view === v.id ? "bg-card text-foreground shadow-card" : "text-muted-foreground hover:text-foreground",
             )}
           >
             <v.icon className="size-4" />
@@ -110,7 +115,7 @@ export function TaskBoardScreen() {
       </div>
 
       {/* Filtros */}
-      <div className="no-scrollbar flex gap-2 overflow-x-auto px-5 py-3">
+      <div className="no-scrollbar flex gap-2 overflow-x-auto px-5 py-4">
         <FilterChip active={filter === "all"} onClick={() => setFilter("all")}>
           Todas
         </FilterChip>
@@ -127,7 +132,7 @@ export function TaskBoardScreen() {
           {statuses.map((s) => {
             const col = visible.filter((t) => t.status === s.id);
             return (
-              <div key={s.id} className="w-[78%] shrink-0 snap-start rounded-xl bg-muted/70 p-2">
+              <div key={s.id} className="w-[80%] shrink-0 snap-start rounded-3xl bg-surface p-2.5">
                 <div className="flex items-center justify-between px-1.5 py-1">
                   <div className="flex items-center gap-2">
                     <StatusPill status={s.id} />
@@ -137,7 +142,7 @@ export function TaskBoardScreen() {
                     type="button"
                     aria-label={`Nova tarefa em ${s.label}`}
                     onClick={() => setAddingTo(s.id)}
-                    className="rounded p-1 text-muted-foreground hover:bg-accent"
+                    className="flex size-8 items-center justify-center rounded-full bg-card text-foreground shadow-card"
                   >
                     <Plus className="size-4" />
                   </button>
@@ -160,13 +165,13 @@ export function TaskBoardScreen() {
                       }}
                       onBlur={() => commitDraft(s.id)}
                       placeholder="Digite um nome…"
-                      className="rounded-lg bg-card px-3 py-2.5 text-sm shadow-card outline-none ring-2 ring-ring/40"
+                      className="rounded-2xl bg-card px-4 py-3 text-sm shadow-card outline-none ring-2 ring-ring/50"
                     />
                   ) : (
                     <button
                       type="button"
                       onClick={() => setAddingTo(s.id)}
-                      className="flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm text-muted-foreground hover:bg-accent"
+                      className="flex items-center gap-1.5 rounded-2xl px-3 py-2.5 text-sm font-semibold text-muted-foreground hover:bg-surface-strong"
                     >
                       <Plus className="size-4" />
                       Nova
@@ -180,13 +185,13 @@ export function TaskBoardScreen() {
       ) : (
         <div className="px-3">
           {visible.map((t) => (
-            <div key={t.id} className="flex items-center gap-3 rounded-md px-2 py-2.5 hover:bg-accent">
+            <div key={t.id} className="flex items-center gap-3 rounded-2xl px-3 py-3.5 hover:bg-surface">
               <button
                 type="button"
                 aria-label={t.status === "done" ? "Desmarcar" : "Concluir"}
                 onClick={() => updateTask(t.id, { status: t.status === "done" ? "todo" : "done" })}
                 className={cn(
-                  "flex size-[18px] shrink-0 items-center justify-center rounded border transition-colors",
+                  "flex size-[22px] shrink-0 items-center justify-center rounded-full border-2 transition-colors",
                   t.status === "done"
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-muted-foreground/50",
@@ -199,7 +204,7 @@ export function TaskBoardScreen() {
                 )}
               </button>
               <button type="button" onClick={() => setSelectedId(t.id)} className="min-w-0 flex-1 text-left">
-                <p className={cn("truncate text-[15px]", t.status === "done" && "text-muted-foreground line-through")}>
+                <p className={cn("truncate text-[15px] font-medium", t.status === "done" && "text-muted-foreground line-through")}>
                   {t.title}
                 </p>
               </button>
@@ -208,6 +213,20 @@ export function TaskBoardScreen() {
           ))}
         </div>
       )}
+
+      <div className="px-5 pt-5">
+        <button
+          type="button"
+          onClick={() => {
+            setView("board");
+            setAddingTo("todo");
+          }}
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-brand py-3.5 text-[15px] font-semibold text-brand-foreground active:opacity-90"
+        >
+          <Plus className="size-4" />
+          Nova tarefa
+        </button>
+      </div>
 
       {selected && (
         <TaskSheet
@@ -234,10 +253,8 @@ function FilterChip({
       type="button"
       onClick={onClick}
       className={cn(
-        "flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-[13px] font-medium transition-colors",
-        active
-          ? "border-foreground bg-foreground text-background"
-          : "border-border bg-card text-muted-foreground hover:bg-accent",
+        "flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition-colors",
+        active ? "bg-brand text-brand-foreground" : "bg-surface text-foreground hover:bg-surface-strong",
       )}
     >
       {children}
@@ -248,7 +265,7 @@ function FilterChip({
 function StatusPill({ status }: { status: Status }) {
   const s = statuses.find((x) => x.id === status)!;
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[13px] font-medium", tagClasses[s.color])}>
+    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[13px] font-semibold", tagClasses[s.color])}>
       <span className={cn("size-1.5 rounded-full", dotClasses[s.color])} />
       {s.label}
     </span>
@@ -257,7 +274,7 @@ function StatusPill({ status }: { status: Status }) {
 
 function TagBadge({ label, color }: { label: string; color: keyof typeof tagClasses }) {
   return (
-    <span className={cn("inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium", tagClasses[color])}>
+    <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold", tagClasses[color])}>
       {label}
     </span>
   );
@@ -269,9 +286,9 @@ function TaskCard({ task, onOpen }: { task: Task; onOpen: () => void }) {
     <button
       type="button"
       onClick={onOpen}
-      className="w-full rounded-lg bg-card p-3 text-left shadow-card transition-transform active:scale-[0.98]"
+      className="w-full rounded-2xl bg-card p-4 text-left shadow-card transition-transform active:scale-[0.98]"
     >
-      <p className={cn("text-sm font-medium leading-snug", task.status === "done" && "text-muted-foreground")}>
+      <p className={cn("text-[15px] font-semibold leading-snug", task.status === "done" && "text-muted-foreground")}>
         {task.title}
       </p>
       <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
@@ -306,16 +323,21 @@ function TaskSheet({
         onClick={onClose}
         className="absolute inset-0 bg-overlay animate-in fade-in duration-200"
       />
-      <div className="relative rounded-t-3xl bg-card px-5 pb-8 pt-3 shadow-sheet animate-in slide-in-from-bottom duration-300">
+      <div className="relative rounded-t-[2rem] bg-card px-5 pb-8 pt-3 shadow-sheet animate-in slide-in-from-bottom duration-300">
         <div className="mx-auto h-1 w-10 rounded-full bg-border" />
         <div className="mt-3 flex items-start justify-between gap-3">
-          <h3 className="text-xl font-bold leading-snug tracking-tight">{task.title}</h3>
-          <button type="button" onClick={onClose} aria-label="Fechar" className="rounded-md p-1 text-muted-foreground hover:bg-accent">
+          <h3 className="text-[22px] font-bold leading-snug tracking-tight">{task.title}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Fechar"
+            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-surface text-foreground"
+          >
             <X className="size-5" />
           </button>
         </div>
 
-        <dl className="mt-4 space-y-1 text-sm">
+        <dl className="mt-4 space-y-1 rounded-2xl bg-surface px-4 py-2 text-sm">
           <PropRow icon={CircleDot} label="Status">
             <StatusPill status={task.status} />
           </PropRow>
@@ -330,7 +352,7 @@ function TaskSheet({
           </PropRow>
         </dl>
 
-        <p className="mt-5 text-xs font-semibold text-muted-foreground">Mover para</p>
+        <p className="mt-5 text-sm font-bold">Mover para</p>
         <div className="mt-2 grid grid-cols-3 gap-2">
           {statuses.map((s) => (
             <button
@@ -338,17 +360,25 @@ function TaskSheet({
               type="button"
               onClick={() => onMove(s.id)}
               className={cn(
-                "flex items-center justify-center gap-1.5 rounded-lg border py-2 text-sm font-medium transition-colors",
-                task.status === s.id
-                  ? cn("border-transparent", tagClasses[s.color])
-                  : "border-border text-muted-foreground hover:bg-accent",
+                "flex items-center justify-center gap-1.5 rounded-full py-2.5 text-sm font-semibold transition-colors",
+                task.status === s.id ? "bg-brand text-brand-foreground" : "bg-surface text-foreground hover:bg-surface-strong",
               )}
             >
-              <span className={cn("size-1.5 rounded-full", dotClasses[s.color])} />
               {s.label}
             </button>
           ))}
         </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            onMove(task.status === "done" ? "todo" : "done");
+            onClose();
+          }}
+          className="mt-6 flex w-full items-center justify-center rounded-full bg-brand py-3.5 text-[15px] font-semibold text-brand-foreground active:opacity-90"
+        >
+          {task.status === "done" ? "Reabrir tarefa" : "Concluir tarefa"}
+        </button>
       </div>
     </div>
   );
@@ -365,7 +395,7 @@ function PropRow({
 }) {
   return (
     <div className="flex items-center py-1.5">
-      <dt className="flex w-32 items-center gap-2 text-muted-foreground">
+      <dt className="flex w-32 items-center gap-2 font-medium text-muted-foreground">
         <Icon className="size-4" />
         {label}
       </dt>
