@@ -6,9 +6,9 @@ import { TaskBoardScreen } from "@/components/proto/TaskBoardScreen";
 export const Route = createFileRoute("/tarefas")({
   head: () => ({
     meta: [
-      { title: "Tarefas — Segundo Cérebro" },
+      { title: "Tarefas — Murdock Assistent" },
       { name: "description", content: "Quadro de tarefas estilo Notion para organizar o que precisa sair da cabeça." },
-      { property: "og:title", content: "Tarefas — Segundo Cérebro" },
+      { property: "og:title", content: "Tarefas — Murdock Assistent" },
       { property: "og:description", content: "Quadro de tarefas estilo Notion para organizar o que precisa sair da cabeça." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
