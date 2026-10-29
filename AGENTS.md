@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Prototype screens live in `src/components/proto/` and are wrapped by `PhoneShell` per route; sheets/overlays use `absolute` positioning anchored to the phone frame (the scroll area stays unpositioned) so they stay inside the device mockup on desktop.
+- Mock data for the prototype lives in `src/lib/proto-data.ts`; no backend yet, state is local to each screen.
