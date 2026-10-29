@@ -47,7 +47,7 @@ export function HomeScreen() {
 
       {/* Acesso rápido */}
       <SectionLabel>Acesso rápido</SectionLabel>
-      <div className="no-scrollbar flex snap-x gap-3 overflow-x-auto px-5 pb-6 pt-2">
+      <div className="no-scrollbar flex snap-x scroll-px-5 gap-3 overflow-x-auto px-5 pb-6 pt-2">
         {quickAccess.map((q) => {
           const card = (
             <>

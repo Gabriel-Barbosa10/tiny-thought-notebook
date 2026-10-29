@@ -123,7 +123,7 @@ export function TaskBoardScreen() {
       </div>
 
       {view === "board" ? (
-        <div className="no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2">
+        <div className="no-scrollbar flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-2">
           {statuses.map((s) => {
             const col = visible.filter((t) => t.status === s.id);
             return (
