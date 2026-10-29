@@ -5,13 +5,20 @@ import { BatteryFull, CheckSquare, Home, Search, Signal, Wifi, X } from "lucide-
 import { cn } from "@/lib/utils";
 import { favorites, flattenPages, privatePages } from "@/lib/proto-data";
 
-export function PhoneShell({ children }: { children: ReactNode }) {
+export function PhoneShell({
+  children,
+  statusTone = "default",
+}: {
+  children: ReactNode;
+  /** "brand" pinta a barra de status de grafite, para telas com topo escuro. */
+  statusTone?: "default" | "brand";
+}) {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <div className="phone-stage">
       <div className="phone-frame">
-        <StatusBar />
+        <StatusBar tone={statusTone} />
         {/* Scroll area is intentionally not positioned so sheets anchor to the frame */}
         <main className="no-scrollbar flex-1 overflow-y-auto">{children}</main>
         <BottomNav onSearch={() => setSearchOpen(true)} />
@@ -21,9 +28,14 @@ export function PhoneShell({ children }: { children: ReactNode }) {
   );
 }
 
-function StatusBar() {
+function StatusBar({ tone }: { tone: "default" | "brand" }) {
   return (
-    <div className="hidden h-11 shrink-0 items-center justify-between px-7 text-sm font-semibold text-foreground sm:flex">
+    <div
+      className={cn(
+        "hidden h-11 shrink-0 items-center justify-between px-7 text-sm font-semibold sm:flex",
+        tone === "brand" ? "bg-brand text-brand-foreground" : "bg-background text-foreground",
+      )}
+    >
       <span>13:13</span>
       <div className="flex items-center gap-1.5">
         <Signal className="size-4" />
@@ -35,16 +47,16 @@ function StatusBar() {
 }
 
 const navItem =
-  "flex flex-1 flex-col items-center gap-1 py-2 text-[11px] font-medium text-muted-foreground transition-colors";
+  "flex flex-1 flex-col items-center gap-1 py-2 text-[11px] font-semibold text-muted-foreground transition-colors";
 
 function BottomNav({ onSearch }: { onSearch: () => void }) {
   return (
-    <nav className="flex shrink-0 border-t border-border bg-background px-4 pb-5 pt-1 sm:pb-6">
+    <nav className="flex shrink-0 border-t border-border bg-background px-4 pb-5 pt-1.5 sm:pb-6">
       <Link
         to="/"
         activeOptions={{ exact: true }}
         className={navItem}
-        activeProps={{ className: "text-foreground" }}
+        activeProps={{ className: "text-brand" }}
       >
         <Home className="size-[22px]" strokeWidth={1.8} />
         Início
@@ -53,7 +65,7 @@ function BottomNav({ onSearch }: { onSearch: () => void }) {
         <Search className="size-[22px]" strokeWidth={1.8} />
         Buscar
       </button>
-      <Link to="/tarefas" className={navItem} activeProps={{ className: "text-foreground" }}>
+      <Link to="/tarefas" className={navItem} activeProps={{ className: "text-brand" }}>
         <CheckSquare className="size-[22px]" strokeWidth={1.8} />
         Tarefas
       </Link>
@@ -77,7 +89,7 @@ function SearchOverlay({ onClose }: { onClose: () => void }) {
   return (
     <div className="absolute inset-0 z-40 flex flex-col bg-background animate-in fade-in slide-in-from-bottom-4 duration-200">
       <div className="hidden h-11 shrink-0 sm:block" />
-      <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+      <div className="mx-4 mt-3 flex items-center gap-2 rounded-full bg-surface px-4 py-3">
         <Search className="size-4 text-muted-foreground" />
         <input
           autoFocus
@@ -90,7 +102,7 @@ function SearchOverlay({ onClose }: { onClose: () => void }) {
           type="button"
           onClick={onClose}
           aria-label="Fechar busca"
-          className="rounded-md p-1 text-muted-foreground hover:bg-accent"
+          className="rounded-full p-1 text-muted-foreground hover:bg-accent"
         >
           <X className="size-5" />
         </button>
@@ -107,7 +119,7 @@ function SearchOverlay({ onClose }: { onClose: () => void }) {
             </>
           );
           const cls = cn(
-            "flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-[15px] hover:bg-accent active:bg-accent",
+            "flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left text-[15px] font-medium hover:bg-surface active:bg-surface",
           );
           return p.to ? (
             <Link key={p.id} to={p.to} onClick={onClose} className={cls}>

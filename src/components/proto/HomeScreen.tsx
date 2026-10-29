@@ -1,65 +1,124 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ChevronRight, ChevronsUpDown, MoreHorizontal, Plus, SquarePen } from "lucide-react";
+import {
+  BookOpen,
+  ChevronRight,
+  CircleHelp,
+  Eye,
+  EyeOff,
+  Lightbulb,
+  ListChecks,
+  MoreHorizontal,
+  NotebookPen,
+  Plus,
+  Settings,
+  Sprout,
+  Target,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { MurdockAppIcon } from "@/components/proto/MurdockLogo";
-import {
-  favorites,
-  initialHabits,
-  privatePages,
-  quickAccess,
-  tagClasses,
-  type PageNode,
-} from "@/lib/proto-data";
+import { favorites, initialHabits, initialTasks, privatePages, quickAccess, type PageNode } from "@/lib/proto-data";
+
+const actions = [
+  { id: "nota", label: "Nova nota", icon: NotebookPen },
+  { id: "diario", label: "Diário", icon: BookOpen },
+  { id: "tarefa", label: "Tarefas", icon: ListChecks, to: "/tarefas" as const },
+  { id: "habito", label: "Hábito", icon: Sprout },
+  { id: "meta", label: "Metas", icon: Target },
+  { id: "ideia", label: "Ideia", icon: Lightbulb },
+];
 
 export function HomeScreen() {
   const [habits, setHabits] = useState(initialHabits);
+  const [hidden, setHidden] = useState(false);
   const doneCount = habits.filter((h) => h.done).length;
+  const pending = initialTasks.filter((t) => t.status !== "done").length;
+  const today = initialTasks.filter((t) => t.due === "Hoje" && t.status !== "done").length;
 
   return (
     <div className="pb-8">
-      {/* Topo */}
-      <header className="sticky top-0 z-10 flex items-center justify-between bg-background/95 px-4 py-2.5 backdrop-blur">
-        <button type="button" className="flex items-center gap-2 rounded-md px-1 py-1 hover:bg-accent">
-          <MurdockAppIcon className="size-8" />
-          <span className="text-[15px] font-semibold">Murdock Assistent</span>
-          <ChevronsUpDown className="size-3.5 text-muted-foreground" />
-        </button>
-        <div className="flex items-center gap-1 text-muted-foreground">
-          <button type="button" aria-label="Mais opções" className="rounded-md p-1.5 hover:bg-accent">
-            <MoreHorizontal className="size-5" />
-          </button>
-          <button type="button" aria-label="Nova página" className="rounded-md p-1.5 hover:bg-accent">
-            <SquarePen className="size-5" />
-          </button>
+      {/* Topo grafite, no estilo do Nubank */}
+      <header className="bg-brand px-5 pb-6 pt-3 text-brand-foreground">
+        <div className="flex items-center justify-between">
+          <MurdockAppIcon className="size-12 ring-1 ring-brand-raised" />
+          <div className="flex items-center gap-1">
+            <HeaderIcon label={hidden ? "Mostrar números" : "Esconder números"} onClick={() => setHidden((h) => !h)}>
+              {hidden ? <EyeOff className="size-[22px]" /> : <Eye className="size-[22px]" />}
+            </HeaderIcon>
+            <HeaderIcon label="Ajuda">
+              <CircleHelp className="size-[22px]" />
+            </HeaderIcon>
+            <HeaderIcon label="Configurações">
+              <Settings className="size-[22px]" />
+            </HeaderIcon>
+          </div>
         </div>
+        <h1 className="mt-6 text-[22px] font-bold tracking-tight">Olá, Gabriel</h1>
+        <p className="mt-0.5 text-sm text-brand-muted">Quinta, 29 de outubro</p>
       </header>
 
-      {/* Saudação */}
-      <section className="px-5 pb-5 pt-4">
-        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-          Quinta, 29 de outubro
-        </p>
-        <h1 className="mt-1 text-[26px] font-bold leading-tight tracking-tight">Boa tarde, Gabriel</h1>
-      </section>
+      {/* Resumo do dia */}
+      <Link to="/tarefas" className="flex items-center justify-between px-5 pb-1 pt-6">
+        <div>
+          <p className="text-[17px] font-bold">Tarefas</p>
+          <p className="mt-2 text-[26px] font-bold tracking-tight">
+            {hidden ? "••••" : `${pending} pendentes`}
+          </p>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {hidden ? "•• para hoje" : `${today} para hoje`}
+          </p>
+        </div>
+        <ChevronRight className="size-5 text-muted-foreground" />
+      </Link>
 
-      {/* Acesso rápido */}
-      <SectionLabel>Acesso rápido</SectionLabel>
-      <div className="no-scrollbar flex snap-x scroll-px-5 gap-3 overflow-x-auto px-5 pb-6 pt-2">
+      {/* Atalhos em círculo */}
+      <div className="no-scrollbar flex gap-4 overflow-x-auto px-5 pb-2 pt-6">
+        {actions.map((a) => {
+          const inner = (
+            <>
+              <span className="flex size-[68px] items-center justify-center rounded-full bg-surface text-foreground transition-colors group-active:bg-surface-strong">
+                <a.icon className="size-6" strokeWidth={1.9} />
+              </span>
+              <span className="text-[13px] font-semibold">{a.label}</span>
+            </>
+          );
+          const cls = "group flex w-[68px] shrink-0 flex-col items-center gap-2 text-center";
+          return a.to ? (
+            <Link key={a.id} to={a.to} className={cls}>
+              {inner}
+            </Link>
+          ) : (
+            <button key={a.id} type="button" className={cls}>
+              {inner}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Pílula estilo "Meus cartões" */}
+      <div className="px-5 pt-4">
+        <button
+          type="button"
+          className="flex w-full items-center gap-3 rounded-2xl bg-surface px-4 py-4 text-left text-[15px] font-semibold active:bg-surface-strong"
+        >
+          <NotebookPen className="size-5" />
+          Escrever no diário de hoje
+        </button>
+      </div>
+
+      {/* Cartões de acesso rápido */}
+      <div className="no-scrollbar flex snap-x scroll-px-5 gap-3 overflow-x-auto px-5 pb-6 pt-3">
         {quickAccess.map((q) => {
           const card = (
             <>
-              <div className={cn("h-11 w-full", tagClasses[q.color])} />
-              <div className="px-3 pb-3">
-                <span className="-mt-4 block text-2xl leading-none">{q.icon}</span>
-                <p className="mt-2 truncate text-sm font-semibold">{q.title}</p>
-                <p className="mt-0.5 text-xs text-muted-foreground">{q.edited}</p>
-              </div>
+              <span className="text-xl leading-none">{q.icon}</span>
+              <p className="mt-3 text-[14px] font-semibold leading-snug">{q.title}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">{q.edited}</p>
             </>
           );
           const cls =
-            "block w-36 shrink-0 snap-start overflow-hidden rounded-xl bg-card text-left shadow-card transition-transform active:scale-[0.98]";
+            "block w-[150px] shrink-0 snap-start rounded-2xl bg-surface p-4 text-left transition-transform active:scale-[0.98]";
           return q.to ? (
             <Link key={q.id} to={q.to} className={cls}>
               {card}
@@ -72,74 +131,109 @@ export function HomeScreen() {
         })}
       </div>
 
+      <Divider />
+
       {/* Hábitos */}
-      <div className="flex items-center justify-between pr-5">
-        <SectionLabel>Hábitos de hoje</SectionLabel>
-        <span className="text-xs font-medium text-muted-foreground">
-          {doneCount}/{habits.length}
-        </span>
-      </div>
-      <div className="mx-5 mt-2 h-1 overflow-hidden rounded-full bg-muted">
-        <div
-          className="h-full rounded-full bg-tag-green-foreground transition-all duration-500"
-          style={{ width: `${(doneCount / habits.length) * 100}%` }}
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-2 px-5 pb-6 pt-3">
-        {habits.map((h) => (
+      <section className="px-5 py-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-[17px] font-bold">Hábitos de hoje</h2>
+          <span className="text-sm font-semibold text-muted-foreground">
+            {doneCount} de {habits.length}
+          </span>
+        </div>
+        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface">
+          <div
+            className="h-full rounded-full bg-brand transition-all duration-500"
+            style={{ width: `${(doneCount / habits.length) * 100}%` }}
+          />
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          {habits.map((h) => (
+            <button
+              key={h.id}
+              type="button"
+              onClick={() =>
+                setHabits((prev) => prev.map((x) => (x.id === h.id ? { ...x, done: !x.done } : x)))
+              }
+              className={cn(
+                "flex items-center gap-2.5 rounded-2xl px-4 py-3.5 text-left text-sm font-semibold transition-colors",
+                h.done ? "bg-brand text-brand-foreground" : "bg-surface text-foreground active:bg-surface-strong",
+              )}
+            >
+              <span className="text-base leading-none">{h.icon}</span>
+              <span className={cn("flex-1 truncate", h.done && "line-through decoration-1 opacity-80")}>{h.label}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <Divider />
+
+      {/* Páginas */}
+      <section className="pt-6">
+        <h2 className="px-5 text-[17px] font-bold">Favoritos</h2>
+        <div className="px-2 pb-4 pt-2">
+          {favorites.map((p) => (
+            <TreeRow key={p.id} node={p} depth={0} />
+          ))}
+        </div>
+      </section>
+
+      <Divider />
+
+      <section className="pt-6">
+        <div className="flex items-center justify-between pr-4">
+          <h2 className="px-5 text-[17px] font-bold">Minhas páginas</h2>
           <button
-            key={h.id}
             type="button"
-            onClick={() =>
-              setHabits((prev) => prev.map((x) => (x.id === h.id ? { ...x, done: !x.done } : x)))
-            }
-            className={cn(
-              "flex items-center gap-2 rounded-lg border px-3 py-2.5 text-left text-sm transition-colors",
-              h.done
-                ? "border-transparent bg-tag-green text-tag-green-foreground"
-                : "border-border bg-card text-foreground hover:bg-accent",
-            )}
+            aria-label="Adicionar página"
+            className="flex size-8 items-center justify-center rounded-full bg-surface text-foreground"
           >
-            <span className="text-base leading-none">{h.icon}</span>
-            <span className={cn("flex-1 truncate font-medium", h.done && "line-through decoration-1")}>
-              {h.label}
-            </span>
+            <Plus className="size-4" />
           </button>
-        ))}
-      </div>
-
-      {/* Árvore de páginas */}
-      <SectionLabel>Favoritos</SectionLabel>
-      <div className="px-2 pb-5 pt-1">
-        {favorites.map((p) => (
-          <TreeRow key={p.id} node={p} depth={0} />
-        ))}
-      </div>
-
-      <div className="flex items-center justify-between pr-4">
-        <SectionLabel>Privado</SectionLabel>
-        <button type="button" aria-label="Adicionar página" className="rounded p-1 text-muted-foreground hover:bg-accent">
-          <Plus className="size-4" />
-        </button>
-      </div>
-      <div className="px-2 pt-1">
-        {privatePages.map((p) => (
-          <TreeRow key={p.id} node={p} depth={0} defaultOpen={p.id === "diario"} />
-        ))}
-        <button
-          type="button"
-          className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-[15px] text-muted-foreground hover:bg-accent"
-        >
-          <Plus className="size-4" />
-          Nova página
-        </button>
-      </div>
+        </div>
+        <div className="px-2 pt-2">
+          {privatePages.map((p) => (
+            <TreeRow key={p.id} node={p} depth={0} defaultOpen={p.id === "diario"} />
+          ))}
+        </div>
+        <div className="px-5 pt-4">
+          <button
+            type="button"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-brand py-3.5 text-[15px] font-semibold text-brand-foreground active:opacity-90"
+          >
+            <Plus className="size-4" />
+            Nova página
+          </button>
+        </div>
+      </section>
     </div>
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <h2 className="px-5 text-xs font-semibold text-muted-foreground">{children}</h2>;
+function HeaderIcon({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className="flex size-10 items-center justify-center rounded-full text-brand-foreground hover:bg-brand-raised"
+    >
+      {children}
+    </button>
+  );
+}
+
+function Divider() {
+  return <div className="h-px bg-border" />;
 }
 
 function TreeRow({ node, depth, defaultOpen = false }: { node: PageNode; depth: number; defaultOpen?: boolean }) {
@@ -152,12 +246,12 @@ function TreeRow({ node, depth, defaultOpen = false }: { node: PageNode; depth: 
       <span className="truncate">{node.title}</span>
     </>
   );
-  const labelCls = "flex min-w-0 flex-1 items-center gap-2.5 py-2 text-left";
+  const labelCls = "flex min-w-0 flex-1 items-center gap-3 py-2.5 text-left";
 
   return (
     <div>
       <div
-        className="group flex items-center gap-1 rounded-md pr-2 text-[15px] hover:bg-accent active:bg-accent"
+        className="group flex items-center gap-1 rounded-xl pr-2 text-[15px] font-medium hover:bg-surface active:bg-surface"
         style={{ paddingLeft: `${depth * 18 + 4}px` }}
       >
         <button
@@ -165,7 +259,7 @@ function TreeRow({ node, depth, defaultOpen = false }: { node: PageNode; depth: 
           aria-label={open ? "Recolher" : "Expandir"}
           onClick={() => setOpen((o) => !o)}
           className={cn(
-            "flex size-6 shrink-0 items-center justify-center rounded text-muted-foreground hover:bg-secondary",
+            "flex size-7 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:bg-surface-strong",
             !hasChildren && "invisible",
           )}
         >
