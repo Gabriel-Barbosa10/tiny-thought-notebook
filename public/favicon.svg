@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
-  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9ebef"/><stop offset="1" stop-color="#fbfbfc"/></linearGradient></defs>
-  <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#bg)" stroke="#2a2d33" stroke-width="1"/>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c2f36"/><stop offset="1" stop-color="#1d1f23"/></linearGradient></defs>
+  <rect x="2" y="2" width="116" height="116" rx="28" fill="url(#bg)" stroke="none"/>
   <g transform="translate(17 44.5)">
-    <path fill="#1d1f23" d="M0.5 28V10.5Q0.5 6.5 4.5 6.5H32V27.5H26.5V12H20V27.5H15V12H6V28Z"/>
-    <path fill="#1d1f23" d="M55 1.5H60.5V30H55Z"/>
+    <path fill="#f4f5f7" d="M0.5 28V10.5Q0.5 6.5 4.5 6.5H32V27.5H26.5V12H20V27.5H15V12H6V28Z"/>
+    <path fill="#f4f5f7" d="M55 1.5H60.5V30H55Z"/>
     <path fill="#8e99a9" d="M17 4.5H53.5Q60.5 4.5 60.5 11.5V20.5Q60.5 28 53 28H46.5Q39 28 39 20.5V11H44.5V19.5Q44.5 22.5 47.5 22.5H52Q55 22.5 55 19.5V12.5Q55 10 52.5 10H17Z"/>
-    <path fill="#1d1f23" d="M55 21H60.5V30H55Z"/>
-    <path fill="#1d1f23" d="M62.5 13L76.5 0.5H85L69.5 15.5L86 29.5H77.5L62.5 18Z"/>
+    <path fill="#f4f5f7" d="M55 21H60.5V30H55Z"/>
+    <path fill="#f4f5f7" d="M62.5 13L76.5 0.5H85L69.5 15.5L86 29.5H77.5L62.5 18Z"/>
   </g>
 </svg>
