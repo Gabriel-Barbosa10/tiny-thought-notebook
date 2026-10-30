@@ -7,9 +7,15 @@ export const Route = createFileRoute("/historico")({
   head: () => ({
     meta: [
       { title: "Histórico — Murdock Assistent" },
-      { name: "description", content: "Contas marcadas como pagas, agrupadas por mês, com exportação em CSV." },
+      {
+        name: "description",
+        content: "Contas marcadas como pagas, agrupadas por mês, com exportação em CSV.",
+      },
       { property: "og:title", content: "Histórico — Murdock Assistent" },
-      { property: "og:description", content: "Contas marcadas como pagas, agrupadas por mês, com exportação em CSV." },
+      {
+        property: "og:description",
+        content: "Contas marcadas como pagas, agrupadas por mês, com exportação em CSV.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

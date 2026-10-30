@@ -1,6 +1,15 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { BookOpen, ChevronRight, FileText, Pin, PinOff, Route as RouteIcon, Search, Trash2 } from "lucide-react";
+import {
+  BookOpen,
+  ChevronRight,
+  FileText,
+  Pin,
+  PinOff,
+  Route as RouteIcon,
+  Search,
+  Trash2,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {
@@ -16,7 +25,17 @@ import {
   type PageKind,
   type StudyPage,
 } from "@/lib/central-store";
-import { Chip, ChipRow, ConfirmDialog, EmptyState, Fab, FormSheet, IconButton, ScreenHeader, Tag } from "@/components/proto/ui";
+import {
+  Chip,
+  ChipRow,
+  ConfirmDialog,
+  EmptyState,
+  Fab,
+  FormSheet,
+  IconButton,
+  ScreenHeader,
+  Tag,
+} from "@/components/proto/ui";
 
 const KINDS: PageKind[] = ["Ideia", "Anotação", "Análise de dados"];
 const FILTERS = ["Todos", ...KINDS] as const;
@@ -34,7 +53,9 @@ export function StudiesScreen() {
     () =>
       s.pages
         .filter((p) => filter === "Todos" || p.kind === filter)
-        .filter((p) => !query || `${p.title} ${p.content}`.toLowerCase().includes(query.toLowerCase()))
+        .filter(
+          (p) => !query || `${p.title} ${p.content}`.toLowerCase().includes(query.toLowerCase()),
+        )
         .sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.edited.localeCompare(a.edited)),
     [s.pages, filter, query],
   );
@@ -44,12 +65,18 @@ export function StudiesScreen() {
       <ScreenHeader title="Estudos" back="/areas" />
 
       <div className="px-5 pt-2">
-        <Link to="/areas/trilha" className="flex gap-3 rounded-2xl bg-tag-blue p-4 active:opacity-90">
+        <Link
+          to="/areas/trilha"
+          className="flex gap-3 rounded-2xl bg-tag-blue p-4 active:opacity-90"
+        >
           <RouteIcon className="mt-0.5 size-5 shrink-0 text-tag-blue-foreground" />
           <div className="flex-1">
             <p className="text-[15px] font-bold">Trilha de Data Science</p>
             <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-background">
-              <div className="h-full rounded-full bg-brand transition-all" style={{ width: `${pct}%` }} />
+              <div
+                className="h-full rounded-full bg-brand transition-all"
+                style={{ width: `${pct}%` }}
+              />
             </div>
             <p className="mt-1.5 text-xs font-medium text-foreground">
               {done} de {TRAIL_TOTAL} tópicos · {pct}%
@@ -81,16 +108,27 @@ export function StudiesScreen() {
         <ul className="mt-3 divide-y divide-border">
           {list.map((p) => (
             <li key={p.id}>
-              <button type="button" onClick={() => setEditing(p)} className="flex w-full items-start gap-3 px-5 py-3.5 text-left active:bg-surface">
-                <FileText className="mt-0.5 size-5 shrink-0 text-muted-foreground" strokeWidth={1.8} />
+              <button
+                type="button"
+                onClick={() => setEditing(p)}
+                className="flex w-full items-start gap-3 px-5 py-3.5 text-left active:bg-surface"
+              >
+                <FileText
+                  className="mt-0.5 size-5 shrink-0 text-muted-foreground"
+                  strokeWidth={1.8}
+                />
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-1.5">
-                    {p.pinned && <Pin className="size-3.5 shrink-0 fill-current text-muted-foreground" />}
+                    {p.pinned && (
+                      <Pin className="size-3.5 shrink-0 fill-current text-muted-foreground" />
+                    )}
                     <span className="truncate text-[15px] font-semibold">{p.title}</span>
                   </span>
                   <span className="mt-1 flex items-center gap-2">
                     <Tag color={pageKindColor[p.kind]}>{p.kind}</Tag>
-                    <span className="text-xs text-muted-foreground">editada em {fmtDate(parseISO(p.edited))}</span>
+                    <span className="text-xs text-muted-foreground">
+                      editada em {fmtDate(parseISO(p.edited))}
+                    </span>
                   </span>
                 </span>
               </button>
@@ -100,7 +138,9 @@ export function StudiesScreen() {
       )}
 
       <Fab label="Nova página" onClick={() => setEditing("new")} />
-      {editing && <PageEditor page={editing === "new" ? null : editing} onClose={() => setEditing(null)} />}
+      {editing && (
+        <PageEditor page={editing === "new" ? null : editing} onClose={() => setEditing(null)} />
+      )}
     </div>
   );
 }
@@ -117,7 +157,9 @@ export function PageEditor({ page, onClose }: { page: StudyPage | null; onClose:
     if (!title.trim()) return setError("Dê um título à página");
     const data = { title: title.trim(), kind, content, pinned, edited: toISO(TODAY) };
     setCentral((s) => ({
-      pages: page ? s.pages.map((p) => (p.id === page.id ? { ...p, ...data } : p)) : [{ id: uid("p"), ...data }, ...s.pages],
+      pages: page
+        ? s.pages.map((p) => (p.id === page.id ? { ...p, ...data } : p))
+        : [{ id: uid("p"), ...data }, ...s.pages],
     }));
     onClose();
   };

@@ -26,12 +26,16 @@ export function TrailScreen() {
 
   const toggle = (id: string) =>
     setCentral((st) => ({
-      trailDone: st.trailDone.includes(id) ? st.trailDone.filter((x) => x !== id) : [...st.trailDone, id],
+      trailDone: st.trailDone.includes(id)
+        ? st.trailDone.filter((x) => x !== id)
+        : [...st.trailDone, id],
     }));
 
   const study = (id: string, title: string) => {
     if (!canWrite) {
-      snack.show("Este aparelho não tem Apple Intelligence. Sem ela, o Jarvis só escreve a página com o Claude conectado.");
+      snack.show(
+        "Este aparelho não tem Apple Intelligence. Sem ela, o Jarvis só escreve a página com o Claude conectado.",
+      );
       return;
     }
     setGenerating(id);
@@ -55,8 +59,8 @@ export function TrailScreen() {
     <div className="pb-24">
       <ScreenHeader title="Data Science" back="/areas/estudos" />
       <p className="px-5 text-sm leading-relaxed text-muted-foreground">
-        Marque o que já estudou. Em cada tópico, o Jarvis escreve uma página com explicação, exemplo de código e
-        exercício, que fica salva em Estudos. Só o nome do tópico é enviado.
+        Marque o que já estudou. Em cada tópico, o Jarvis escreve uma página com explicação, exemplo
+        de código e exercício, que fica salva em Estudos. Só o nome do tópico é enviado.
       </p>
 
       {TRAIL.map((m, mi) => {
@@ -85,12 +89,19 @@ export function TrailScreen() {
                       onClick={() => toggle(t.id)}
                       className={cn(
                         "flex size-6 shrink-0 items-center justify-center rounded-lg border-2 transition-colors",
-                        done ? "border-brand bg-brand text-brand-foreground" : "border-surface-strong",
+                        done
+                          ? "border-brand bg-brand text-brand-foreground"
+                          : "border-surface-strong",
                       )}
                     >
                       {done && <Check className="size-3.5" strokeWidth={3} />}
                     </button>
-                    <span className={cn("flex-1 text-[15px]", done && "text-muted-foreground line-through decoration-1")}>
+                    <span
+                      className={cn(
+                        "flex-1 text-[15px]",
+                        done && "text-muted-foreground line-through decoration-1",
+                      )}
+                    >
                       {t.title}
                     </span>
                     {generating === t.id ? (
@@ -128,7 +139,12 @@ export function TrailScreen() {
       })}
 
       {snack.node}
-      {open && <PageEditor page={s.pages.find((p) => p.id === open.id) ?? open} onClose={() => setOpen(null)} />}
+      {open && (
+        <PageEditor
+          page={s.pages.find((p) => p.id === open.id) ?? open}
+          onClose={() => setOpen(null)}
+        />
+      )}
     </div>
   );
 }

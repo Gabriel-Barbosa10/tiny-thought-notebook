@@ -7,9 +7,15 @@ export const Route = createFileRoute("/areas/estudos")({
   head: () => ({
     meta: [
       { title: "Estudos — Murdock Assistent" },
-      { name: "description", content: "Ideias, anotações e análises de dados, com a trilha de Data Science." },
+      {
+        name: "description",
+        content: "Ideias, anotações e análises de dados, com a trilha de Data Science.",
+      },
       { property: "og:title", content: "Estudos — Murdock Assistent" },
-      { property: "og:description", content: "Ideias, anotações e análises de dados, com a trilha de Data Science." },
+      {
+        property: "og:description",
+        content: "Ideias, anotações e análises de dados, com a trilha de Data Science.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

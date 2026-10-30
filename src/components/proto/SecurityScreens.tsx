@@ -101,9 +101,13 @@ export function PrivacyCover({ kind }: { kind: "background" | "recording" }) {
       <ShieldCheck className="size-14" strokeWidth={1.6} />
       <p className="mt-4 text-[22px] font-bold tracking-tight">Murdock Assistent</p>
       {kind === "recording" && (
-        <p className="mt-2 text-sm leading-relaxed text-brand-muted">Conteúdo oculto durante a gravação da tela.</p>
+        <p className="mt-2 text-sm leading-relaxed text-brand-muted">
+          Conteúdo oculto durante a gravação da tela.
+        </p>
       )}
-      <p className="absolute bottom-10 text-[11px] text-brand-muted">Protótipo: toque para voltar</p>
+      <p className="absolute bottom-10 text-[11px] text-brand-muted">
+        Protótipo: toque para voltar
+      </p>
     </button>
   );
 }

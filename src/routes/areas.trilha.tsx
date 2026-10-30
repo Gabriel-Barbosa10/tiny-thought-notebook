@@ -7,9 +7,15 @@ export const Route = createFileRoute("/areas/trilha")({
   head: () => ({
     meta: [
       { title: "Trilha de Data Science — Murdock Assistent" },
-      { name: "description", content: "26 tópicos de Data Science para marcar e estudar com o Jarvis." },
+      {
+        name: "description",
+        content: "26 tópicos de Data Science para marcar e estudar com o Jarvis.",
+      },
       { property: "og:title", content: "Trilha de Data Science — Murdock Assistent" },
-      { property: "og:description", content: "26 tópicos de Data Science para marcar e estudar com o Jarvis." },
+      {
+        property: "og:description",
+        content: "26 tópicos de Data Science para marcar e estudar com o Jarvis.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

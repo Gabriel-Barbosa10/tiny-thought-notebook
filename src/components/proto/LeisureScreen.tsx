@@ -86,7 +86,11 @@ export function LeisureScreen() {
                 <ul className="divide-y divide-border">
                   {group.map((i) => (
                     <li key={i.id} className="flex items-center gap-3 px-5 py-3">
-                      <button type="button" onClick={() => setEditing(i)} className="min-w-0 flex-1 text-left">
+                      <button
+                        type="button"
+                        onClick={() => setEditing(i)}
+                        className="min-w-0 flex-1 text-left"
+                      >
                         <p className="truncate text-[15px] font-semibold">{i.title}</p>
                         <p className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
                           {i.category}
@@ -94,12 +98,20 @@ export function LeisureScreen() {
                         </p>
                       </button>
                       {st === "Quero ver" && (
-                        <IconButton label="Começar" onClick={() => setStatus(i.id, "Em andamento")} className="bg-surface">
+                        <IconButton
+                          label="Começar"
+                          onClick={() => setStatus(i.id, "Em andamento")}
+                          className="bg-surface"
+                        >
                           <Play className="size-4 fill-current" />
                         </IconButton>
                       )}
                       {st === "Em andamento" && (
-                        <IconButton label="Marcar como concluído" onClick={() => setStatus(i.id, "Concluído")} className="bg-surface">
+                        <IconButton
+                          label="Marcar como concluído"
+                          onClick={() => setStatus(i.id, "Concluído")}
+                          className="bg-surface"
+                        >
                           <Check className="size-4" strokeWidth={2.6} />
                         </IconButton>
                       )}
@@ -114,7 +126,9 @@ export function LeisureScreen() {
 
       <Fab label="Novo item" onClick={() => setEditing("new")} />
       {snack.node}
-      {editing && <ItemForm item={editing === "new" ? null : editing} onClose={() => setEditing(null)} />}
+      {editing && (
+        <ItemForm item={editing === "new" ? null : editing} onClose={() => setEditing(null)} />
+      )}
     </div>
   );
 }
@@ -137,7 +151,10 @@ function GamesSection() {
       />
       <div className="px-5">
         {!team ? (
-          <Link to="/configuracoes" className="block rounded-2xl bg-surface p-4 text-sm text-muted-foreground">
+          <Link
+            to="/configuracoes"
+            className="block rounded-2xl bg-surface p-4 text-sm text-muted-foreground"
+          >
             Informe seu time em Configurações → Lazer.
           </Link>
         ) : loading ? (
@@ -147,7 +164,9 @@ function GamesSection() {
             Não encontrei o time "{team}". Confira o nome em Configurações.
           </p>
         ) : games.length === 0 ? (
-          <p className="rounded-2xl bg-surface p-4 text-sm text-muted-foreground">Nenhum jogo marcado por enquanto.</p>
+          <p className="rounded-2xl bg-surface p-4 text-sm text-muted-foreground">
+            Nenhum jogo marcado por enquanto.
+          </p>
         ) : (
           <ul className="divide-y divide-border rounded-2xl border border-border">
             {games.map((g) => (
@@ -169,13 +188,21 @@ function GamesSection() {
             ))}
           </ul>
         )}
-        {known && !loading && <p className="mt-2 text-[11px] text-muted-foreground">Horários de Brasília.</p>}
+        {known && !loading && (
+          <p className="mt-2 text-[11px] text-muted-foreground">Horários de Brasília.</p>
+        )}
       </div>
     </section>
   );
 }
 
-function MoviesSection({ filter, onAdded }: { filter: "Filmes" | "Séries" | null; onAdded: (t: string) => void }) {
+function MoviesSection({
+  filter,
+  onAdded,
+}: {
+  filter: "Filmes" | "Séries" | null;
+  onAdded: (t: string) => void;
+}) {
   const s = useCentral();
   const [loading, refetch] = useFakeLoading(1000);
   const hasKey = !!s.settings.tmdbKey.trim();
@@ -184,7 +211,10 @@ function MoviesSection({ filter, onAdded }: { filter: "Filmes" | "Séries" | nul
 
   const add = (title: string, type: "Filmes" | "Séries") => {
     setCentral((st) => ({
-      leisure: [...st.leisure, { id: uid("l"), title, category: type, status: "Quero ver", rating: 0, notes: "" }],
+      leisure: [
+        ...st.leisure,
+        { id: uid("l"), title, category: type, status: "Quero ver", rating: 0, notes: "" },
+      ],
     }));
     onAdded(title);
   };
@@ -200,8 +230,12 @@ function MoviesSection({ filter, onAdded }: { filter: "Filmes" | "Séries" | nul
       />
       <div className="px-5">
         {!hasKey ? (
-          <Link to="/configuracoes" className="block rounded-2xl bg-surface p-4 text-sm text-muted-foreground">
-            Para ver estreias e sugestões, crie uma chave grátis no TMDB e cole em Configurações → Lazer.
+          <Link
+            to="/configuracoes"
+            className="block rounded-2xl bg-surface p-4 text-sm text-muted-foreground"
+          >
+            Para ver estreias e sugestões, crie uma chave grátis no TMDB e cole em Configurações →
+            Lazer.
           </Link>
         ) : loading ? (
           <Loading text="Buscando filmes e séries…" className="py-3" />
@@ -211,8 +245,14 @@ function MoviesSection({ filter, onAdded }: { filter: "Filmes" | "Séries" | nul
               const added = inList(m.title);
               const Icon = m.type === "Filmes" ? Clapperboard : Tv;
               return (
-                <li key={m.id} className="flex items-start gap-3 rounded-2xl border border-border p-4">
-                  <Icon className="mt-0.5 size-5 shrink-0 text-muted-foreground" strokeWidth={1.8} />
+                <li
+                  key={m.id}
+                  className="flex items-start gap-3 rounded-2xl border border-border p-4"
+                >
+                  <Icon
+                    className="mt-0.5 size-5 shrink-0 text-muted-foreground"
+                    strokeWidth={1.8}
+                  />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-[15px] font-bold">{m.title}</p>
@@ -224,9 +264,15 @@ function MoviesSection({ filter, onAdded }: { filter: "Filmes" | "Séries" | nul
                   <IconButton
                     label={added ? "Já está em 'Quero ver'" : "Adicionar a 'Quero ver'"}
                     onClick={() => !added && add(m.title, m.type)}
-                    className={added ? "bg-brand text-brand-foreground hover:bg-brand" : "bg-surface"}
+                    className={
+                      added ? "bg-brand text-brand-foreground hover:bg-brand" : "bg-surface"
+                    }
                   >
-                    {added ? <Check className="size-4" strokeWidth={2.6} /> : <ListPlus className="size-4" />}
+                    {added ? (
+                      <Check className="size-4" strokeWidth={2.6} />
+                    ) : (
+                      <ListPlus className="size-4" />
+                    )}
                   </IconButton>
                 </li>
               );
@@ -234,7 +280,8 @@ function MoviesSection({ filter, onAdded }: { filter: "Filmes" | "Séries" | nul
           </ul>
         )}
         <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
-          Dados de filmes e séries do TMDB. Este app usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.
+          Dados de filmes e séries do TMDB. Este app usa a API do TMDB, mas não é endossado nem
+          certificado pelo TMDB.
         </p>
       </div>
     </section>
@@ -254,7 +301,9 @@ function ItemForm({ item, onClose }: { item: LeisureItem | null; onClose: () => 
     if (!title.trim()) return setError("Dê um título ao item");
     const data = { title: title.trim(), category, status, rating, notes };
     setCentral((s) => ({
-      leisure: item ? s.leisure.map((l) => (l.id === item.id ? { ...l, ...data } : l)) : [...s.leisure, { id: uid("l"), ...data }],
+      leisure: item
+        ? s.leisure.map((l) => (l.id === item.id ? { ...l, ...data } : l))
+        : [...s.leisure, { id: uid("l"), ...data }],
     }));
     onClose();
   };
@@ -273,7 +322,16 @@ function ItemForm({ item, onClose }: { item: LeisureItem | null; onClose: () => 
       }
     >
       <div className="space-y-5">
-        <Field label="Título" value={title} onChange={(v) => { setTitle(v); setError(null); }} placeholder="Ex.: Ruptura, Zelda, Fla x Flu" error={error} />
+        <Field
+          label="Título"
+          value={title}
+          onChange={(v) => {
+            setTitle(v);
+            setError(null);
+          }}
+          placeholder="Ex.: Ruptura, Zelda, Fla x Flu"
+          error={error}
+        />
         <ChipGroup label="Categoria" options={CATEGORIES} value={category} onChange={setCategory} />
         <ChipGroup label="Andamento" options={STATUSES} value={status} onChange={setStatus} />
         <div>
@@ -282,7 +340,13 @@ function ItemForm({ item, onClose }: { item: LeisureItem | null; onClose: () => 
             <Stars value={rating} onChange={setRating} size="lg" />
           </div>
         </div>
-        <Field label="Observações" multiline value={notes} onChange={setNotes} placeholder="Onde assistir, plataforma, temporada, com quem..." />
+        <Field
+          label="Observações"
+          multiline
+          value={notes}
+          onChange={setNotes}
+          placeholder="Onde assistir, plataforma, temporada, com quem..."
+        />
       </div>
       {confirmDelete && item && (
         <ConfirmDialog
@@ -325,4 +389,3 @@ export function ChipGroup<T extends string>({
     </div>
   );
 }
-

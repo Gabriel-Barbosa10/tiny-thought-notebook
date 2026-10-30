@@ -7,9 +7,15 @@ export const Route = createFileRoute("/areas/")({
   head: () => ({
     meta: [
       { title: "Áreas — Murdock Assistent" },
-      { name: "description", content: "Estudos, lazer e datas especiais organizados em um só lugar." },
+      {
+        name: "description",
+        content: "Estudos, lazer e datas especiais organizados em um só lugar.",
+      },
       { property: "og:title", content: "Áreas — Murdock Assistent" },
-      { property: "og:description", content: "Estudos, lazer e datas especiais organizados em um só lugar." },
+      {
+        property: "og:description",
+        content: "Estudos, lazer e datas especiais organizados em um só lugar.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

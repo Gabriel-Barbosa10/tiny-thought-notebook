@@ -87,7 +87,8 @@ export function TaskBoardScreen() {
         <p className="text-sm font-semibold text-muted-foreground">Projetos</p>
         <h1 className="mt-1 text-[28px] font-bold leading-tight tracking-tight">Tarefas</h1>
         <p className="mt-1 text-[15px] text-muted-foreground">
-          {tasks.filter((t) => t.status !== "done").length} pendentes · tudo que precisa sair da cabeça.
+          {tasks.filter((t) => t.status !== "done").length} pendentes · tudo que precisa sair da
+          cabeça.
         </p>
       </section>
 
@@ -105,7 +106,9 @@ export function TaskBoardScreen() {
             onClick={() => setView(v.id)}
             className={cn(
               "flex flex-1 items-center justify-center gap-1.5 rounded-full py-2 text-sm font-semibold transition-colors",
-              view === v.id ? "bg-card text-foreground shadow-card" : "text-muted-foreground hover:text-foreground",
+              view === v.id
+                ? "bg-card text-foreground shadow-card"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             <v.icon className="size-4" />
@@ -185,7 +188,10 @@ export function TaskBoardScreen() {
       ) : (
         <div className="px-3">
           {visible.map((t) => (
-            <div key={t.id} className="flex items-center gap-3 rounded-2xl px-3 py-3.5 hover:bg-surface">
+            <div
+              key={t.id}
+              className="flex items-center gap-3 rounded-2xl px-3 py-3.5 hover:bg-surface"
+            >
               <button
                 type="button"
                 aria-label={t.status === "done" ? "Desmarcar" : "Concluir"}
@@ -198,13 +204,28 @@ export function TaskBoardScreen() {
                 )}
               >
                 {t.status === "done" && (
-                  <svg viewBox="0 0 12 12" className="size-3" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    viewBox="0 0 12 12"
+                    className="size-3"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <path d="M2.5 6.5l2.2 2.2L9.5 3.8" />
                   </svg>
                 )}
               </button>
-              <button type="button" onClick={() => setSelectedId(t.id)} className="min-w-0 flex-1 text-left">
-                <p className={cn("truncate text-[15px] font-medium", t.status === "done" && "text-muted-foreground line-through")}>
+              <button
+                type="button"
+                onClick={() => setSelectedId(t.id)}
+                className="min-w-0 flex-1 text-left"
+              >
+                <p
+                  className={cn(
+                    "truncate text-[15px] font-medium",
+                    t.status === "done" && "text-muted-foreground line-through",
+                  )}
+                >
                   {t.title}
                 </p>
               </button>
@@ -254,7 +275,9 @@ function FilterChip({
       onClick={onClick}
       className={cn(
         "flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold transition-colors",
-        active ? "bg-brand text-brand-foreground" : "bg-surface text-foreground hover:bg-surface-strong",
+        active
+          ? "bg-brand text-brand-foreground"
+          : "bg-surface text-foreground hover:bg-surface-strong",
       )}
     >
       {children}
@@ -265,7 +288,12 @@ function FilterChip({
 function StatusPill({ status }: { status: Status }) {
   const s = statuses.find((x) => x.id === status)!;
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[13px] font-semibold", tagClasses[s.color])}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[13px] font-semibold",
+        tagClasses[s.color],
+      )}
+    >
       <span className={cn("size-1.5 rounded-full", dotClasses[s.color])} />
       {s.label}
     </span>
@@ -274,7 +302,12 @@ function StatusPill({ status }: { status: Status }) {
 
 function TagBadge({ label, color }: { label: string; color: keyof typeof tagClasses }) {
   return (
-    <span className={cn("inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold", tagClasses[color])}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold",
+        tagClasses[color],
+      )}
+    >
       {label}
     </span>
   );
@@ -288,7 +321,12 @@ function TaskCard({ task, onOpen }: { task: Task; onOpen: () => void }) {
       onClick={onOpen}
       className="w-full rounded-2xl bg-card p-4 text-left shadow-card transition-transform active:scale-[0.98]"
     >
-      <p className={cn("text-[15px] font-semibold leading-snug", task.status === "done" && "text-muted-foreground")}>
+      <p
+        className={cn(
+          "text-[15px] font-semibold leading-snug",
+          task.status === "done" && "text-muted-foreground",
+        )}
+      >
         {task.title}
       </p>
       <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
@@ -361,7 +399,9 @@ function TaskSheet({
               onClick={() => onMove(s.id)}
               className={cn(
                 "flex items-center justify-center gap-1.5 rounded-full py-2.5 text-sm font-semibold transition-colors",
-                task.status === s.id ? "bg-brand text-brand-foreground" : "bg-surface text-foreground hover:bg-surface-strong",
+                task.status === s.id
+                  ? "bg-brand text-brand-foreground"
+                  : "bg-surface text-foreground hover:bg-surface-strong",
               )}
             >
               {s.label}

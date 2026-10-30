@@ -1,5 +1,13 @@
 import { useMemo, useState } from "react";
-import { FileSpreadsheet, FolderDown, History, Mail, MoreVertical, Share, Undo2 } from "lucide-react";
+import {
+  FileSpreadsheet,
+  FolderDown,
+  History,
+  Mail,
+  MoreVertical,
+  Share,
+  Undo2,
+} from "lucide-react";
 
 import {
   MONTHS,
@@ -11,7 +19,14 @@ import {
   useCentral,
   type HistoryEntry,
 } from "@/lib/central-store";
-import { ChipRow, ConfirmDialog, EmptyState, IconButton, ScreenHeader, Tag } from "@/components/proto/ui";
+import {
+  ChipRow,
+  ConfirmDialog,
+  EmptyState,
+  IconButton,
+  ScreenHeader,
+  Tag,
+} from "@/components/proto/ui";
 
 export function HistoryScreen() {
   const { history } = useCentral();
@@ -20,7 +35,10 @@ export function HistoryScreen() {
   const [unmark, setUnmark] = useState<HistoryEntry | null>(null);
   const [exportStep, setExportStep] = useState<null | "confirm" | "share">(null);
 
-  const names = useMemo(() => ["Todas", ...Array.from(new Set(history.map((h) => h.name)))], [history]);
+  const names = useMemo(
+    () => ["Todas", ...Array.from(new Set(history.map((h) => h.name)))],
+    [history],
+  );
   const groups = useMemo(() => {
     const list = [...history]
       .filter((h) => filter === "Todas" || h.name === filter)
@@ -52,7 +70,11 @@ export function HistoryScreen() {
       />
 
       {history.length === 0 ? (
-        <EmptyState icon={History} title="Nada no histórico ainda" text="As contas marcadas como pagas aparecem aqui." />
+        <EmptyState
+          icon={History}
+          title="Nada no histórico ainda"
+          text="As contas marcadas como pagas aparecem aqui."
+        />
       ) : (
         <>
           <ChipRow options={names} value={filter} onChange={setFilter} className="pb-2 pt-2" />
@@ -60,7 +82,9 @@ export function HistoryScreen() {
             <section key={month} className="pt-5">
               <div className="flex items-baseline justify-between px-5 pb-1">
                 <h2 className="text-[17px] font-bold">{monthLabel(parseISO(`${month}-01`))}</h2>
-                <span className="text-sm font-bold">{fmtBRL(entries.reduce((s, h) => s + (h.amount ?? 0), 0))}</span>
+                <span className="text-sm font-bold">
+                  {fmtBRL(entries.reduce((s, h) => s + (h.amount ?? 0), 0))}
+                </span>
               </div>
               <ul className="divide-y divide-border">
                 {entries.map((h) => {
@@ -76,10 +100,14 @@ export function HistoryScreen() {
                           em {fmtDate(parseISO(h.paidAt))} · venc. {fmtDate(parseISO(h.due))}
                         </p>
                         {h.charges > 0 && (
-                          <p className="mt-0.5 text-xs text-muted-foreground">Inclui {fmtBRL(h.charges)} de multa e juros</p>
+                          <p className="mt-0.5 text-xs text-muted-foreground">
+                            Inclui {fmtBRL(h.charges)} de multa e juros
+                          </p>
                         )}
                       </div>
-                      <p className="pt-0.5 text-[15px] font-bold">{h.amount != null ? fmtBRL(h.amount) : "Sem valor"}</p>
+                      <p className="pt-0.5 text-[15px] font-bold">
+                        {h.amount != null ? fmtBRL(h.amount) : "Sem valor"}
+                      </p>
                       <IconButton
                         label="Mais opções"
                         className="-mr-2 size-8 text-muted-foreground"
@@ -145,7 +173,10 @@ function ShareSheet({ onClose }: { onClose: () => void }) {
     { label: "Numbers", icon: FileSpreadsheet },
   ];
   return (
-    <div className="absolute inset-0 z-[45] flex flex-col justify-end bg-overlay animate-in fade-in duration-150" onClick={onClose}>
+    <div
+      className="absolute inset-0 z-[45] flex flex-col justify-end bg-overlay animate-in fade-in duration-150"
+      onClick={onClose}
+    >
       <div
         className="rounded-t-3xl bg-background px-5 pb-8 pt-3 shadow-sheet animate-in slide-in-from-bottom-6 duration-200"
         onClick={(e) => e.stopPropagation()}
@@ -162,7 +193,12 @@ function ShareSheet({ onClose }: { onClose: () => void }) {
         </div>
         <div className="mt-5 grid grid-cols-3 gap-3">
           {options.map((o) => (
-            <button key={o.label} type="button" onClick={onClose} className="flex flex-col items-center gap-2 text-center">
+            <button
+              key={o.label}
+              type="button"
+              onClick={onClose}
+              className="flex flex-col items-center gap-2 text-center"
+            >
               <span className="flex size-14 items-center justify-center rounded-2xl bg-surface">
                 <o.icon className="size-6" />
               </span>
@@ -170,7 +206,11 @@ function ShareSheet({ onClose }: { onClose: () => void }) {
             </button>
           ))}
         </div>
-        <button type="button" onClick={onClose} className="mt-6 w-full rounded-full bg-surface py-3.5 text-[15px] font-semibold">
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-6 w-full rounded-full bg-surface py-3.5 text-[15px] font-semibold"
+        >
           Fechar
         </button>
       </div>

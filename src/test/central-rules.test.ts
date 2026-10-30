@@ -14,8 +14,16 @@ import {
 
 const today = new Date(2026, 9, 29);
 const bill = (p: Partial<Bill>): Bill => ({
-  id: "x", name: "Internet 1", amount: 99, dueDay: 19, fine: 2, interest: 1,
-  recurring: true, notes: "", openDue: "2026-10-19", ...p,
+  id: "x",
+  name: "Internet 1",
+  amount: 99,
+  dueDay: 19,
+  fine: 2,
+  interest: 1,
+  recurring: true,
+  notes: "",
+  openDue: "2026-10-19",
+  ...p,
 });
 
 describe("Contas", () => {
@@ -34,7 +42,9 @@ describe("Contas", () => {
     expect(billStatus(bill({ openDue: "2026-11-03" }), today).tags[0]?.label).toBe("Em 5 dias");
     expect(billStatus(bill({ openDue: "2026-11-15" }), today).tags[0]?.label).toBe("Pendente");
     expect(billStatus(bill({ openDue: null }), today).tags[0]?.label).toBe("Sem fatura em aberto");
-    expect(billStatus(bill({ amount: null }), today).tags.map((t) => t.label)).toContain("Valor a definir");
+    expect(billStatus(bill({ amount: null }), today).tags.map((t) => t.label)).toContain(
+      "Valor a definir",
+    );
   });
 
   it("em meses curtos, o vencimento cai no último dia", () => {
@@ -45,7 +55,11 @@ describe("Contas", () => {
 describe("Briefing", () => {
   it("ordena atrasadas, vence hoje e próximos 7 dias; sem atrasadas mostra o card positivo", () => {
     const cards = buildBriefing(
-      [bill({ id: "a" }), bill({ id: "b", name: "Faculdade", openDue: "2026-10-29", amount: null }), bill({ id: "c", name: "Internet 2", openDue: "2026-11-01" })],
+      [
+        bill({ id: "a" }),
+        bill({ id: "b", name: "Faculdade", openDue: "2026-10-29", amount: null }),
+        bill({ id: "c", name: "Internet 2", openDue: "2026-11-01" }),
+      ],
       today,
     );
     expect(cards.map((c) => c.tone)).toEqual(["alert", "attention", "info"]);

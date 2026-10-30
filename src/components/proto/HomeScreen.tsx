@@ -36,7 +36,16 @@ import {
   useCentral,
   validateClaudeKey,
 } from "@/lib/central-store";
-import { Callout, Loading, PillButton, SecureField, SectionTitle, SourceLine, Tag, useFakeLoading } from "@/components/proto/ui";
+import {
+  Callout,
+  Loading,
+  PillButton,
+  SecureField,
+  SectionTitle,
+  SourceLine,
+  Tag,
+  useFakeLoading,
+} from "@/components/proto/ui";
 
 const shortcuts = [
   { label: "Contas", icon: ReceiptText, to: "/contas" as const },
@@ -83,7 +92,10 @@ export function HomeScreen() {
         <div className="flex items-center justify-between">
           <MurdockAppIcon className="size-12 ring-1 ring-brand-raised" />
           <div className="flex items-center gap-1">
-            <HeaderIcon label={hidden ? "Mostrar valores" : "Esconder valores"} onClick={() => setHidden((h) => !h)}>
+            <HeaderIcon
+              label={hidden ? "Mostrar valores" : "Esconder valores"}
+              onClick={() => setHidden((h) => !h)}
+            >
               {hidden ? <EyeOff className="size-[22px]" /> : <Eye className="size-[22px]" />}
             </HeaderIcon>
             <Link
@@ -96,7 +108,9 @@ export function HomeScreen() {
             </Link>
           </div>
         </div>
-        <p className="mt-6 text-xs font-semibold uppercase tracking-wider text-brand-muted">Início</p>
+        <p className="mt-6 text-xs font-semibold uppercase tracking-wider text-brand-muted">
+          Início
+        </p>
         <h1 className="mt-1 text-[26px] font-bold leading-tight tracking-tight">{greeting}</h1>
         <p className="mt-0.5 text-sm text-brand-muted">
           {WEEKDAYS[TODAY.getDay()]}, {fmtDate(TODAY)}
@@ -136,7 +150,11 @@ export function HomeScreen() {
       {/* Atalhos em círculo */}
       <div className="no-scrollbar flex gap-4 overflow-x-auto px-5 pt-6">
         {shortcuts.map((a) => (
-          <Link key={a.label} to={a.to} className="group flex w-[64px] shrink-0 flex-col items-center gap-2 text-center">
+          <Link
+            key={a.label}
+            to={a.to}
+            className="group flex w-[64px] shrink-0 flex-col items-center gap-2 text-center"
+          >
             <span className="flex size-[64px] items-center justify-center rounded-full bg-surface text-foreground transition-colors group-active:bg-surface-strong">
               <a.icon className="size-6" strokeWidth={1.9} />
             </span>
@@ -150,7 +168,12 @@ export function HomeScreen() {
       {/* Briefing do dia */}
       <section className="pt-7">
         <SectionTitle>Briefing do dia</SectionTitle>
-        <div className={cn("mt-3 space-y-2.5 px-5 transition-opacity", briefingLoading && "opacity-40")}>
+        <div
+          className={cn(
+            "mt-3 space-y-2.5 px-5 transition-opacity",
+            briefingLoading && "opacity-40",
+          )}
+        >
           {cards.map((c) => (
             <Callout key={c.id} tone={c.tone} title={c.title}>
               {blur(c.text)}
@@ -207,7 +230,9 @@ function SummaryBox({ label, value, danger }: { label: string; value: string; da
   return (
     <div className="rounded-2xl bg-surface px-4 py-3.5">
       <p className="text-xs font-semibold text-muted-foreground">{label}</p>
-      <p className={cn("mt-1 text-[18px] font-bold tracking-tight", danger && "text-destructive")}>{value}</p>
+      <p className={cn("mt-1 text-[18px] font-bold tracking-tight", danger && "text-destructive")}>
+        {value}
+      </p>
     </div>
   );
 }
@@ -218,23 +243,34 @@ function ConnectClaudeCard() {
   const connect = () => {
     const err = validateClaudeKey(key);
     setError(err);
-    if (!err) setCentral((st) => ({ settings: { ...st.settings, claudeKey: key.trim(), claudeOn: true } }));
+    if (!err)
+      setCentral((st) => ({ settings: { ...st.settings, claudeKey: key.trim(), claudeOn: true } }));
   };
   return (
     <div className="px-5 pt-6">
       <Callout tone="info" icon={Sparkles} title="Conectar o Jarvis ao Claude">
         <p>
-          Cole sua chave da API da Anthropic uma vez e o Claude passa a escrever seu briefing do dia. Ela fica só neste
-          iPhone, no banco criptografado.
+          Cole sua chave da API da Anthropic uma vez e o Claude passa a escrever seu briefing do
+          dia. Ela fica só neste iPhone, no banco criptografado.
         </p>
         <div className="mt-3">
-          <SecureField label="Chave da API" value={key} onChange={setKey} error={error} placeholder="sk-ant-…" />
+          <SecureField
+            label="Chave da API"
+            value={key}
+            onChange={setKey}
+            error={error}
+            placeholder="sk-ant-…"
+          />
         </div>
         <div className="mt-3 flex gap-2">
           <PillButton onClick={connect} className="py-2.5">
             Conectar
           </PillButton>
-          <PillButton variant="surface" className="bg-background py-2.5" onClick={() => setCentral({ claudeCardDismissed: true })}>
+          <PillButton
+            variant="surface"
+            className="bg-background py-2.5"
+            onClick={() => setCentral({ claudeCardDismissed: true })}
+          >
             Agora não
           </PillButton>
         </div>
@@ -255,7 +291,11 @@ function NewsSection() {
       <SectionTitle>Notícias</SectionTitle>
       <SourceLine
         className="px-5 pt-1"
-        text={hasClaude ? `Jarvis · busca na web · às ${UPDATED_AT}` : `Google Notícias · às ${UPDATED_AT}`}
+        text={
+          hasClaude
+            ? `Jarvis · busca na web · às ${UPDATED_AT}`
+            : `Google Notícias · às ${UPDATED_AT}`
+        }
         loading={mode === "loading"}
         loadingText="Buscando as notícias…"
         onRefresh={() => refetch()}
@@ -263,7 +303,10 @@ function NewsSection() {
       />
       <div className="mt-2 space-y-2.5 px-5">
         {topics.length === 0 ? (
-          <Link to="/configuracoes" className="block rounded-2xl bg-surface p-4 text-sm text-muted-foreground">
+          <Link
+            to="/configuracoes"
+            className="block rounded-2xl bg-surface p-4 text-sm text-muted-foreground"
+          >
             Escolha os temas que quer acompanhar em Configurações.
           </Link>
         ) : mode === "loading" ? (
@@ -274,7 +317,9 @@ function NewsSection() {
           </p>
         ) : mode === "offline" || mode === "down" ? (
           <p className="rounded-2xl bg-tag-red p-4 text-sm font-medium text-tag-red-foreground">
-            {mode === "offline" ? "Sem conexão com a internet." : "O Google Notícias está fora do ar agora."}
+            {mode === "offline"
+              ? "Sem conexão com a internet."
+              : "O Google Notícias está fora do ar agora."}
           </p>
         ) : (
           topics.flatMap(newsFor).map((n) => (
@@ -287,7 +332,9 @@ function NewsSection() {
             >
               <Tag color="blue">{n.topic}</Tag>
               <p className="mt-2 text-[15px] font-bold leading-snug">{n.headline}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{hasClaude ? n.summary : n.published}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {hasClaude ? n.summary : n.published}
+              </p>
               <p className="mt-2.5 flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <ExternalLink className="size-3.5" />
                 {n.source} · news.google.com
@@ -300,7 +347,15 @@ function NewsSection() {
   );
 }
 
-function HeaderIcon({ label, onClick, children }: { label: string; onClick?: () => void; children: React.ReactNode }) {
+function HeaderIcon({
+  label,
+  onClick,
+  children,
+}: {
+  label: string;
+  onClick?: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <button
       type="button"

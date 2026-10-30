@@ -19,7 +19,17 @@ import {
   useCentral,
   type Bill,
 } from "@/lib/central-store";
-import { ConfirmDialog, EmptyState, Fab, Field, FormSheet, ScreenHeader, Tag, ToggleRow, useSnackbar } from "@/components/proto/ui";
+import {
+  ConfirmDialog,
+  EmptyState,
+  Fab,
+  Field,
+  FormSheet,
+  ScreenHeader,
+  Tag,
+  ToggleRow,
+  useSnackbar,
+} from "@/components/proto/ui";
 
 export function BillsScreen() {
   const { bills } = useCentral();
@@ -37,7 +47,11 @@ export function BillsScreen() {
       <ScreenHeader title="Contas" subtitle="Lembretes de vencimento. Nada aqui faz pagamentos." />
 
       {sorted.length === 0 ? (
-        <EmptyState icon={ReceiptText} title="Nenhuma conta ainda" text="Toque em + para cadastrar a primeira." />
+        <EmptyState
+          icon={ReceiptText}
+          title="Nenhuma conta ainda"
+          text="Toque em + para cadastrar a primeira."
+        />
       ) : (
         <ul className="mt-2 divide-y divide-border">
           {sorted.map((b) => (
@@ -56,7 +70,9 @@ export function BillsScreen() {
 
       <Fab label="Nova conta" onClick={() => setEditing("new")} />
       {snack.node}
-      {editing && <BillForm bill={editing === "new" ? null : editing} onClose={() => setEditing(null)} />}
+      {editing && (
+        <BillForm bill={editing === "new" ? null : editing} onClose={() => setEditing(null)} />
+      )}
     </div>
   );
 }
@@ -80,7 +96,11 @@ function BillRow({ bill, onOpen, onPaid }: { bill: Bill; onOpen: () => void; onP
       >
         <Check className="size-4" strokeWidth={3} />
       </button>
-      <button type="button" onClick={onOpen} className="flex min-w-0 flex-1 items-start gap-3 text-left">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="flex min-w-0 flex-1 items-start gap-3 text-left"
+      >
         <div className="min-w-0 flex-1">
           <p className="truncate text-[15px] font-bold">{bill.name}</p>
           <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -91,7 +111,9 @@ function BillRow({ bill, onOpen, onPaid }: { bill: Bill; onOpen: () => void; onP
             ))}
           </div>
           <p className="mt-1.5 text-xs text-muted-foreground">
-            {bill.openDue ? `Vence em ${fmtDate(parseISO(bill.openDue))}` : `Todo dia ${bill.dueDay}`}
+            {bill.openDue
+              ? `Vence em ${fmtDate(parseISO(bill.openDue))}`
+              : `Todo dia ${bill.dueDay}`}
           </p>
           {late && charges.total != null && (
             <p className="mt-0.5 text-xs text-muted-foreground">
@@ -120,7 +142,9 @@ function BillForm({ bill, onClose }: { bill: Bill | null; onClose: () => void })
   const [interest, setInterest] = useState(bill ? toInputDecimal(bill.interest) : "1");
   const [recurring, setRecurring] = useState(bill?.recurring ?? true);
   const [notes, setNotes] = useState(bill?.notes ?? "");
-  const [errors, setErrors] = useState<Partial<Record<"name" | "amount" | "day" | "fine" | "interest", string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<"name" | "amount" | "day" | "fine" | "interest", string>>
+  >({});
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const save = () => {
@@ -160,13 +184,15 @@ function BillForm({ bill, onClose }: { bill: Bill | null; onClose: () => void })
   };
 
   return (
-    <FormSheet
-      title={bill ? "Editar conta" : "Nova conta"}
-      onClose={onClose}
-      onSave={save}
-    >
+    <FormSheet title={bill ? "Editar conta" : "Nova conta"} onClose={onClose} onSave={save}>
       <div className="space-y-5">
-        <Field label="Nome" value={name} onChange={setName} placeholder="Ex.: Internet, Faculdade" error={errors.name} />
+        <Field
+          label="Nome"
+          value={name}
+          onChange={setName}
+          placeholder="Ex.: Internet, Faculdade"
+          error={errors.name}
+        />
         <Field
           label="Valor"
           prefix="R$"
@@ -187,8 +213,22 @@ function BillForm({ bill, onClose }: { bill: Bill | null; onClose: () => void })
           error={errors.day}
         />
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Multa" suffix="%" inputMode="decimal" value={fine} onChange={setFine} error={errors.fine} />
-          <Field label="Juros ao mês" suffix="%" inputMode="decimal" value={interest} onChange={setInterest} error={errors.interest} />
+          <Field
+            label="Multa"
+            suffix="%"
+            inputMode="decimal"
+            value={fine}
+            onChange={setFine}
+            error={errors.fine}
+          />
+          <Field
+            label="Juros ao mês"
+            suffix="%"
+            inputMode="decimal"
+            value={interest}
+            onChange={setInterest}
+            error={errors.interest}
+          />
         </div>
         <ToggleRow
           label="Repete todo mês"
@@ -231,4 +271,3 @@ function BillForm({ bill, onClose }: { bill: Bill | null; onClose: () => void })
     </FormSheet>
   );
 }
-

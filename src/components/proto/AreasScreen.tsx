@@ -7,15 +7,30 @@ import { ScreenHeader } from "@/components/proto/ui";
 export function AreasScreen() {
   const s = useCentral();
   const doing = s.leisure.filter((l) => l.status === "Em andamento").length;
-  const next = [...s.dates].map((d) => ({ d, ...nextOccurrence(d) })).sort((a, b) => a.days - b.days)[0];
-  const nextLabel = next ? (next.days === 0 ? "hoje" : next.days === 1 ? "amanhã" : `em ${next.days} dias`) : "";
+  const next = [...s.dates]
+    .map((d) => ({ d, ...nextOccurrence(d) }))
+    .sort((a, b) => a.days - b.days)[0];
+  const nextLabel = next
+    ? next.days === 0
+      ? "hoje"
+      : next.days === 1
+        ? "amanhã"
+        : `em ${next.days} dias`
+    : "";
 
-  const rows: { to: "/areas/estudos" | "/areas/lazer" | "/areas/datas"; icon: LucideIcon; title: string; subtitle: string }[] = [
+  const rows: {
+    to: "/areas/estudos" | "/areas/lazer" | "/areas/datas";
+    icon: LucideIcon;
+    title: string;
+    subtitle: string;
+  }[] = [
     {
       to: "/areas/estudos",
       icon: BookOpen,
       title: "Estudos",
-      subtitle: s.pages.length ? `${s.pages.length} ${s.pages.length === 1 ? "página" : "páginas"}` : "Ideias, anotações e análises de dados",
+      subtitle: s.pages.length
+        ? `${s.pages.length} ${s.pages.length === 1 ? "página" : "páginas"}`
+        : "Ideias, anotações e análises de dados",
     },
     {
       to: "/areas/lazer",
@@ -29,7 +44,9 @@ export function AreasScreen() {
       to: "/areas/datas",
       icon: Cake,
       title: "Datas especiais",
-      subtitle: next ? `Próxima: ${next.d.name} ${nextLabel}` : "Aniversários e comemorações, com aviso",
+      subtitle: next
+        ? `Próxima: ${next.d.name} ${nextLabel}`
+        : "Aniversários e comemorações, com aviso",
     },
   ];
 
@@ -44,9 +61,16 @@ export function AreasScreen() {
         ))}
       </ul>
 
-      <p className="px-5 pb-2 pt-8 text-xs font-bold uppercase tracking-wider text-muted-foreground">Também no app</p>
+      <p className="px-5 pb-2 pt-8 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        Também no app
+      </p>
       <div className="px-5">
-        <Row to="/tarefas" icon={ListChecks} title="Tarefas" subtitle="Quadro de tarefas pessoais" />
+        <Row
+          to="/tarefas"
+          icon={ListChecks}
+          title="Tarefas"
+          subtitle="Quadro de tarefas pessoais"
+        />
       </div>
     </div>
   );
@@ -64,7 +88,10 @@ function Row({
   subtitle: string;
 }) {
   return (
-    <Link to={to} className="flex items-center gap-4 rounded-2xl bg-surface p-4 transition-colors active:bg-surface-strong">
+    <Link
+      to={to}
+      className="flex items-center gap-4 rounded-2xl bg-surface p-4 transition-colors active:bg-surface-strong"
+    >
       <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-background">
         <Icon className="size-[22px]" strokeWidth={1.9} />
       </span>

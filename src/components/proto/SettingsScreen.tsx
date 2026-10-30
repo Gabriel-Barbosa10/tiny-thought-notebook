@@ -32,7 +32,9 @@ export function SettingsScreen() {
   const [jarvisName, setJarvisName] = useState(s.settings.jarvisName);
   const [claudeOn, setClaudeOn] = useState(s.settings.claudeOn);
   const [claudeKey, setClaudeKey] = useState(s.settings.claudeKey);
-  const [errors, setErrors] = useState<Partial<Record<"hour" | "days" | "tmdb" | "claude", string | null>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<"hour" | "days" | "tmdb" | "claude", string | null>>
+  >({});
 
   const toggleTopic = (t: string) => {
     setTopicError(null);
@@ -56,7 +58,14 @@ export function SettingsScreen() {
       hour: !/^\d{1,2}$/.test(hour) || h > 23 ? "Informe uma hora de 0 a 23" : null,
       days: !/^\d$/.test(days) || d > 7 ? "Informe de 0 a 7 dias" : null,
       tmdb: validateTmdbKey(tmdb),
-      claude: claudeOn || claudeKey ? (claudeKey ? validateClaudeKey(claudeKey) : claudeOn ? "Cole a chave da API" : null) : null,
+      claude:
+        claudeOn || claudeKey
+          ? claudeKey
+            ? validateClaudeKey(claudeKey)
+            : claudeOn
+              ? "Cole a chave da API"
+              : null
+          : null,
     };
     setErrors(e);
     if (Object.values(e).some(Boolean)) return;
@@ -96,10 +105,25 @@ export function SettingsScreen() {
 
       <Section title="Lembretes">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Hora do aviso" inputMode="numeric" value={hour} onChange={setHour} suffix="h" error={errors.hour} />
-          <Field label="Dias de antecedência" inputMode="numeric" value={days} onChange={setDays} error={errors.days} />
+          <Field
+            label="Hora do aviso"
+            inputMode="numeric"
+            value={hour}
+            onChange={setHour}
+            suffix="h"
+            error={errors.hour}
+          />
+          <Field
+            label="Dias de antecedência"
+            inputMode="numeric"
+            value={days}
+            onChange={setDays}
+            error={errors.days}
+          />
         </div>
-        <p className="text-xs text-muted-foreground">Prévia do aviso na tela bloqueada (sem nome nem valor):</p>
+        <p className="text-xs text-muted-foreground">
+          Prévia do aviso na tela bloqueada (sem nome nem valor):
+        </p>
         <div className="flex items-start gap-3 rounded-2xl bg-surface p-3.5">
           <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand text-brand-foreground">
             <Bell className="size-4" />
@@ -117,7 +141,8 @@ export function SettingsScreen() {
 
       <Section title="Notícias">
         <p className="text-sm text-muted-foreground">
-          Temas das notícias do Início, do Google Notícias (ou do Claude, se conectado). Só os temas são enviados.
+          Temas das notícias do Início, do Google Notícias (ou do Claude, se conectado). Só os temas
+          são enviados.
         </p>
         <div className="flex flex-wrap gap-2">
           {[...PRESET_TOPICS, ...custom].map((t) => (
@@ -128,7 +153,12 @@ export function SettingsScreen() {
         </div>
         <div className="flex items-end gap-2">
           <div className="flex-1">
-            <Field label="Outro tema" value={otherTopic} onChange={setOtherTopic} placeholder="Ex.: Fórmula 1, Apple, energia solar" />
+            <Field
+              label="Outro tema"
+              value={otherTopic}
+              onChange={setOtherTopic}
+              placeholder="Ex.: Fórmula 1, Apple, energia solar"
+            />
           </div>
           <button
             type="button"
@@ -138,7 +168,12 @@ export function SettingsScreen() {
             Adicionar
           </button>
         </div>
-        <p className={cn("text-xs", topicError ? "font-medium text-destructive" : "text-muted-foreground")}>
+        <p
+          className={cn(
+            "text-xs",
+            topicError ? "font-medium text-destructive" : "text-muted-foreground",
+          )}
+        >
           {topicError ?? `${topics.length} de ${MAX_TOPICS} temas escolhidos.`}
         </p>
       </Section>
@@ -161,7 +196,13 @@ export function SettingsScreen() {
       </Section>
 
       <Section title="Jarvis">
-        <Field label="Como o Jarvis deve te chamar" value={jarvisName} onChange={setJarvisName} placeholder="Ex.: Gabriel" helper="Opcional." />
+        <Field
+          label="Como o Jarvis deve te chamar"
+          value={jarvisName}
+          onChange={setJarvisName}
+          placeholder="Ex.: Gabriel"
+          helper="Opcional."
+        />
         <div className="flex items-start gap-3 rounded-2xl bg-surface p-4">
           {aiOk ? (
             <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-tag-green-foreground" />
@@ -247,13 +288,19 @@ function DemoSection() {
   ];
   return (
     <section className="mx-5 mt-2 rounded-3xl border-2 border-dashed border-border p-5">
-      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Só no protótipo</p>
+      <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+        Só no protótipo
+      </p>
       <h2 className="mt-1 text-[17px] font-bold">Ver outros estados</h2>
 
       <p className="mt-4 text-sm font-semibold">IA do iPhone</p>
       <div className="mt-2 flex flex-wrap gap-2">
         {aiModes.map((m) => (
-          <Chip key={m.id} active={s.ai === m.id} onClick={() => setCentral({ ai: m.id, claudeCardDismissed: false })}>
+          <Chip
+            key={m.id}
+            active={s.ai === m.id}
+            onClick={() => setCentral({ ai: m.id, claudeCardDismissed: false })}
+          >
             {m.label}
           </Chip>
         ))}
