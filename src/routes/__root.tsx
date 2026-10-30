@@ -79,9 +79,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "Murdock Assistent" },
-      { name: "description", content: "Murdock Assistent: seu segundo cérebro no celular, no estilo Notion, para organizar a vida pessoal." },
+      {
+        name: "description",
+        content:
+          "Murdock Assistent: seu segundo cérebro no celular, no estilo Notion, para organizar a vida pessoal.",
+      },
       { property: "og:title", content: "Murdock Assistent" },
-      { property: "og:description", content: "Murdock Assistent: seu segundo cérebro no celular, no estilo Notion, para organizar a vida pessoal." },
+      {
+        property: "og:description",
+        content:
+          "Murdock Assistent: seu segundo cérebro no celular, no estilo Notion, para organizar a vida pessoal.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#ffffff" },

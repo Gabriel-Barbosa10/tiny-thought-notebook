@@ -1,6 +1,15 @@
 import { useEffect, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
-import { BatteryFull, History, Home, LayoutGrid, ReceiptText, Signal, Wifi, type LucideIcon } from "lucide-react";
+import {
+  BatteryFull,
+  History,
+  Home,
+  LayoutGrid,
+  ReceiptText,
+  Signal,
+  Wifi,
+  type LucideIcon,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { setCentral, useCentral } from "@/lib/central-store";
@@ -65,7 +74,12 @@ function StatusBar({ tone }: { tone: "default" | "brand" }) {
   );
 }
 
-const tabs: { to: "/" | "/contas" | "/areas" | "/historico"; label: string; icon: LucideIcon; exact?: boolean }[] = [
+const tabs: {
+  to: "/" | "/contas" | "/areas" | "/historico";
+  label: string;
+  icon: LucideIcon;
+  exact?: boolean;
+}[] = [
   { to: "/", label: "Início", icon: Home, exact: true },
   { to: "/contas", label: "Contas", icon: ReceiptText },
   { to: "/areas", label: "Áreas", icon: LayoutGrid },

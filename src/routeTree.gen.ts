@@ -10,11 +10,34 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as ContasRouteImport } from './routes/contas'
+import { Route as HistoricoRouteImport } from './routes/historico'
 import { Route as TarefasRouteImport } from './routes/tarefas'
+import { Route as AreasIndexRouteImport } from './routes/areas.index'
+import { Route as AreasDatasRouteImport } from './routes/areas.datas'
+import { Route as AreasEstudosRouteImport } from './routes/areas.estudos'
+import { Route as AreasLazerRouteImport } from './routes/areas.lazer'
+import { Route as AreasTrilhaRouteImport } from './routes/areas.trilha'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContasRoute = ContasRouteImport.update({
+  id: '/contas',
+  path: '/contas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoricoRoute = HistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TarefasRoute = TarefasRouteImport.update({
@@ -22,31 +45,119 @@ const TarefasRoute = TarefasRouteImport.update({
   path: '/tarefas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AreasIndexRoute = AreasIndexRouteImport.update({
+  id: '/areas/',
+  path: '/areas/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AreasDatasRoute = AreasDatasRouteImport.update({
+  id: '/areas/datas',
+  path: '/areas/datas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AreasEstudosRoute = AreasEstudosRouteImport.update({
+  id: '/areas/estudos',
+  path: '/areas/estudos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AreasLazerRoute = AreasLazerRouteImport.update({
+  id: '/areas/lazer',
+  path: '/areas/lazer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AreasTrilhaRoute = AreasTrilhaRouteImport.update({
+  id: '/areas/trilha',
+  path: '/areas/trilha',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/contas': typeof ContasRoute
+  '/historico': typeof HistoricoRoute
   '/tarefas': typeof TarefasRoute
+  '/areas/datas': typeof AreasDatasRoute
+  '/areas/estudos': typeof AreasEstudosRoute
+  '/areas/lazer': typeof AreasLazerRoute
+  '/areas/trilha': typeof AreasTrilhaRoute
+  '/areas/': typeof AreasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/contas': typeof ContasRoute
+  '/historico': typeof HistoricoRoute
   '/tarefas': typeof TarefasRoute
+  '/areas/datas': typeof AreasDatasRoute
+  '/areas/estudos': typeof AreasEstudosRoute
+  '/areas/lazer': typeof AreasLazerRoute
+  '/areas/trilha': typeof AreasTrilhaRoute
+  '/areas': typeof AreasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/contas': typeof ContasRoute
+  '/historico': typeof HistoricoRoute
   '/tarefas': typeof TarefasRoute
+  '/areas/datas': typeof AreasDatasRoute
+  '/areas/estudos': typeof AreasEstudosRoute
+  '/areas/lazer': typeof AreasLazerRoute
+  '/areas/trilha': typeof AreasTrilhaRoute
+  '/areas/': typeof AreasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/tarefas'
+  fullPaths:
+    | '/'
+    | '/configuracoes'
+    | '/contas'
+    | '/historico'
+    | '/tarefas'
+    | '/areas/datas'
+    | '/areas/estudos'
+    | '/areas/lazer'
+    | '/areas/trilha'
+    | '/areas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/tarefas'
-  id: '__root__' | '/' | '/tarefas'
+  to:
+    | '/'
+    | '/configuracoes'
+    | '/contas'
+    | '/historico'
+    | '/tarefas'
+    | '/areas/datas'
+    | '/areas/estudos'
+    | '/areas/lazer'
+    | '/areas/trilha'
+    | '/areas'
+  id:
+    | '__root__'
+    | '/'
+    | '/configuracoes'
+    | '/contas'
+    | '/historico'
+    | '/tarefas'
+    | '/areas/datas'
+    | '/areas/estudos'
+    | '/areas/lazer'
+    | '/areas/trilha'
+    | '/areas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
+  ContasRoute: typeof ContasRoute
+  HistoricoRoute: typeof HistoricoRoute
   TarefasRoute: typeof TarefasRoute
+  AreasDatasRoute: typeof AreasDatasRoute
+  AreasEstudosRoute: typeof AreasEstudosRoute
+  AreasLazerRoute: typeof AreasLazerRoute
+  AreasTrilhaRoute: typeof AreasTrilhaRoute
+  AreasIndexRoute: typeof AreasIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +169,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contas': {
+      id: '/contas'
+      path: '/contas'
+      fullPath: '/contas'
+      preLoaderRoute: typeof ContasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/historico': {
+      id: '/historico'
+      path: '/historico'
+      fullPath: '/historico'
+      preLoaderRoute: typeof HistoricoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tarefas': {
       id: '/tarefas'
       path: '/tarefas'
@@ -65,12 +197,55 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TarefasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/areas/': {
+      id: '/areas/'
+      path: '/areas'
+      fullPath: '/areas/'
+      preLoaderRoute: typeof AreasIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/areas/datas': {
+      id: '/areas/datas'
+      path: '/areas/datas'
+      fullPath: '/areas/datas'
+      preLoaderRoute: typeof AreasDatasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/areas/estudos': {
+      id: '/areas/estudos'
+      path: '/areas/estudos'
+      fullPath: '/areas/estudos'
+      preLoaderRoute: typeof AreasEstudosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/areas/lazer': {
+      id: '/areas/lazer'
+      path: '/areas/lazer'
+      fullPath: '/areas/lazer'
+      preLoaderRoute: typeof AreasLazerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/areas/trilha': {
+      id: '/areas/trilha'
+      path: '/areas/trilha'
+      fullPath: '/areas/trilha'
+      preLoaderRoute: typeof AreasTrilhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
+  ContasRoute: ContasRoute,
+  HistoricoRoute: HistoricoRoute,
   TarefasRoute: TarefasRoute,
+  AreasDatasRoute: AreasDatasRoute,
+  AreasEstudosRoute: AreasEstudosRoute,
+  AreasLazerRoute: AreasLazerRoute,
+  AreasTrilhaRoute: AreasTrilhaRoute,
+  AreasIndexRoute: AreasIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

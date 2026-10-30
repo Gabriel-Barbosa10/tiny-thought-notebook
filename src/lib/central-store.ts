@@ -14,7 +14,7 @@ const DAY_MS = 86_400_000;
 const pad = (n: number) => String(n).padStart(2, "0");
 
 export function parseISO(iso: string) {
-  const [y, m, d] = iso.split("-").map(Number);
+  const [y = 1970, m = 1, d = 1] = iso.split("-").map(Number);
   return new Date(y, m - 1, d);
 }
 export function toISO(date: Date) {
@@ -29,19 +29,30 @@ export function diffDays(a: Date, b: Date) {
 export function daysInMonth(year: number, month1: number) {
   return new Date(year, month1, 0).getDate();
 }
-export const fmtDate = (d: Date) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+export const fmtDate = (d: Date) =>
+  `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
 export const fmtDayMonth = (d: Date) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`;
 
 export const MONTHS = [
-  "janeiro", "fevereiro", "março", "abril", "maio", "junho",
-  "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
+  "janeiro",
+  "fevereiro",
+  "março",
+  "abril",
+  "maio",
+  "junho",
+  "julho",
+  "agosto",
+  "setembro",
+  "outubro",
+  "novembro",
+  "dezembro",
 ];
 export const WEEKDAYS_SHORT = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 export const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
 export function monthLabel(d: Date) {
-  const m = MONTHS[d.getMonth()];
-  return `${m[0].toUpperCase()}${m.slice(1)} de ${d.getFullYear()}`;
+  const m = MONTHS[d.getMonth()] ?? "";
+  return `${m.charAt(0).toUpperCase()}${m.slice(1)} de ${d.getFullYear()}`;
 }
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
@@ -88,7 +99,10 @@ export type HistoryEntry = {
   charges: number;
 };
 
-export function billCharges(bill: Pick<Bill, "amount" | "fine" | "interest" | "openDue">, today = TODAY) {
+export function billCharges(
+  bill: Pick<Bill, "amount" | "fine" | "interest" | "openDue">,
+  today = TODAY,
+) {
   const daysLate = bill.openDue ? Math.max(0, diffDays(today, parseISO(bill.openDue))) : 0;
   if (bill.amount == null || daysLate === 0) {
     return { daysLate, fine: 0, interest: 0, perDay: 0, total: bill.amount };
@@ -96,14 +110,24 @@ export function billCharges(bill: Pick<Bill, "amount" | "fine" | "interest" | "o
   const fine = round2((bill.amount * bill.fine) / 100);
   const perDayRaw = (bill.amount * bill.interest) / 100 / 30;
   const interest = round2(perDayRaw * daysLate);
-  return { daysLate, fine, interest, perDay: round2(perDayRaw), total: round2(bill.amount + fine + interest) };
+  return {
+    daysLate,
+    fine,
+    interest,
+    perDay: round2(perDayRaw),
+    total: round2(bill.amount + fine + interest),
+  };
 }
 
 export type BillTag = { label: string; color: TagColor };
 export type BillKind = "late" | "today" | "soon" | "pending" | "none";
 
-export function billStatus(bill: Bill, today = TODAY): { kind: BillKind; days: number; tags: BillTag[] } {
-  if (!bill.openDue) return { kind: "none", days: 0, tags: [{ label: "Sem fatura em aberto", color: "gray" }] };
+export function billStatus(
+  bill: Bill,
+  today = TODAY,
+): { kind: BillKind; days: number; tags: BillTag[] } {
+  if (!bill.openDue)
+    return { kind: "none", days: 0, tags: [{ label: "Sem fatura em aberto", color: "gray" }] };
   const days = diffDays(parseISO(bill.openDue), today);
   const tags: BillTag[] = [];
   let kind: BillKind;
@@ -164,7 +188,10 @@ export function buildBriefing(bills: Bill[], today = TODAY): BriefingCard[] {
       id: `today-${b.id}`,
       tone: "attention",
       title: `${b.name} vence hoje`,
-      text: b.amount != null ? `${fmtBRL(b.amount)} até o fim do dia.` : "O valor ainda não foi informado.",
+      text:
+        b.amount != null
+          ? `${fmtBRL(b.amount)} até o fim do dia.`
+          : "O valor ainda não foi informado.",
     });
   }
   for (const { b, s } of open) {
@@ -186,7 +213,9 @@ export function buildBriefing(bills: Bill[], today = TODAY): BriefingCard[] {
       id: "positive",
       tone: "positive",
       title: "Nenhuma conta atrasada",
-      text: next ? `Próximo vencimento: ${next.b.name} em ${fmtDate(parseISO(next.b.openDue!))}.` : "Nenhuma fatura em aberto.",
+      text: next
+        ? `Próximo vencimento: ${next.b.name} em ${fmtDate(parseISO(next.b.openDue!))}.`
+        : "Nenhuma fatura em aberto.",
     });
   }
   return cards.slice(0, 6);
@@ -194,7 +223,9 @@ export function buildBriefing(bills: Bill[], today = TODAY): BriefingCard[] {
 
 export function monthSummary(bills: Bill[], history: HistoryEntry[], today = TODAY) {
   const ym = toISO(today).slice(0, 7);
-  const paid = history.filter((h) => h.paidAt.startsWith(ym)).reduce((s, h) => s + (h.amount ?? 0), 0);
+  const paid = history
+    .filter((h) => h.paidAt.startsWith(ym))
+    .reduce((s, h) => s + (h.amount ?? 0), 0);
   let pending = 0;
   let late = 0;
   let missing = 0;
@@ -208,7 +239,13 @@ export function monthSummary(bills: Bill[], history: HistoryEntry[], today = TOD
     if (s.kind === "late") late += billCharges(b, today).total ?? 0;
     else pending += b.amount;
   }
-  return { total: round2(paid + pending + late), paid: round2(paid), pending: round2(pending), late: round2(late), missing };
+  return {
+    total: round2(paid + pending + late),
+    paid: round2(paid),
+    pending: round2(pending),
+    late: round2(late),
+    missing,
+  };
 }
 
 /* ------------------------------------------------------------------ */
@@ -251,16 +288,23 @@ export function turnsYears(sd: Pick<SpecialDate, "day" | "month" | "year">, toda
 }
 
 /** Erro do formulário de data, ou null. */
-export function validateDateParts(dayText: string, monthText: string, yearText: string, today = TODAY) {
+export function validateDateParts(
+  dayText: string,
+  monthText: string,
+  yearText: string,
+  today = TODAY,
+) {
   const errors: { day?: string; month?: string; year?: string } = {};
   const day = Number(dayText);
   const month = Number(monthText);
   if (!/^\d{1,2}$/.test(monthText) || month < 1 || month > 12) errors.month = "De 1 a 12";
   if (!/^\d{1,2}$/.test(dayText) || day < 1 || day > 31) errors.day = "De 1 a 31";
-  else if (!errors.month && day > daysInMonth(2024, month)) errors.day = `Esse mês tem até ${daysInMonth(2024, month)} dias`;
+  else if (!errors.month && day > daysInMonth(2024, month))
+    errors.day = `Esse mês tem até ${daysInMonth(2024, month)} dias`;
   if (yearText.trim()) {
     const y = Number(yearText);
-    if (!/^\d{4}$/.test(yearText) || y < 1900 || y > today.getFullYear()) errors.year = `Ano entre 1900 e ${today.getFullYear()}`;
+    if (!/^\d{4}$/.test(yearText) || y < 1900 || y > today.getFullYear())
+      errors.year = `Ano entre 1900 e ${today.getFullYear()}`;
   }
   return errors;
 }
@@ -286,12 +330,60 @@ export type StudyPage = {
 };
 
 export const TRAIL: { id: string; title: string; topics: { id: string; title: string }[] }[] = [
-  { id: "m1", title: "Fundamentos", topics: ["Python básico", "Listas, dicionários e funções", "Jupyter Notebook e Git"] },
-  { id: "m2", title: "Dados com Python", topics: ["NumPy", "pandas: DataFrames", "Limpeza e preparação de dados", "Visualização com Matplotlib e Seaborn"] },
-  { id: "m3", title: "SQL", topics: ["SELECT, WHERE e ORDER BY", "JOINs", "GROUP BY e agregações", "Funções de janela", "CTEs e subconsultas"] },
-  { id: "m4", title: "Estatística", topics: ["Estatística descritiva", "Probabilidade", "Distribuições", "Testes de hipótese", "Intervalo de confiança", "Regressão linear"] },
-  { id: "m5", title: "Machine Learning", topics: ["Pré-processamento e features", "Regressão e classificação", "Validação cruzada e métricas", "Árvores e ensembles", "Clustering"] },
-  { id: "m6", title: "Prática", topics: ["Análise exploratória (EDA)", "Storytelling com dados", "Projeto de portfólio"] },
+  {
+    id: "m1",
+    title: "Fundamentos",
+    topics: ["Python básico", "Listas, dicionários e funções", "Jupyter Notebook e Git"],
+  },
+  {
+    id: "m2",
+    title: "Dados com Python",
+    topics: [
+      "NumPy",
+      "pandas: DataFrames",
+      "Limpeza e preparação de dados",
+      "Visualização com Matplotlib e Seaborn",
+    ],
+  },
+  {
+    id: "m3",
+    title: "SQL",
+    topics: [
+      "SELECT, WHERE e ORDER BY",
+      "JOINs",
+      "GROUP BY e agregações",
+      "Funções de janela",
+      "CTEs e subconsultas",
+    ],
+  },
+  {
+    id: "m4",
+    title: "Estatística",
+    topics: [
+      "Estatística descritiva",
+      "Probabilidade",
+      "Distribuições",
+      "Testes de hipótese",
+      "Intervalo de confiança",
+      "Regressão linear",
+    ],
+  },
+  {
+    id: "m5",
+    title: "Machine Learning",
+    topics: [
+      "Pré-processamento e features",
+      "Regressão e classificação",
+      "Validação cruzada e métricas",
+      "Árvores e ensembles",
+      "Clustering",
+    ],
+  },
+  {
+    id: "m6",
+    title: "Prática",
+    topics: ["Análise exploratória (EDA)", "Storytelling com dados", "Projeto de portfólio"],
+  },
 ].map((m) => ({ ...m, topics: m.topics.map((t, i) => ({ id: `${m.id}-${i + 1}`, title: t })) }));
 
 export const TRAIL_TOTAL = TRAIL.reduce((s, m) => s + m.topics.length, 0);
@@ -317,17 +409,65 @@ export type LeisureItem = {
 };
 
 export const KNOWN_TEAMS = [
-  "Flamengo", "Palmeiras", "Corinthians", "São Paulo", "Santos", "Vasco", "Fluminense", "Botafogo",
-  "Grêmio", "Internacional", "Atlético-MG", "Cruzeiro", "Bahia", "Fortaleza", "Athletico-PR", "Vitória",
+  "Flamengo",
+  "Palmeiras",
+  "Corinthians",
+  "São Paulo",
+  "Santos",
+  "Vasco",
+  "Fluminense",
+  "Botafogo",
+  "Grêmio",
+  "Internacional",
+  "Atlético-MG",
+  "Cruzeiro",
+  "Bahia",
+  "Fortaleza",
+  "Athletico-PR",
+  "Vitória",
 ];
 
 export function upcomingGames(team: string) {
-  const rivals = ["Palmeiras", "Bahia", "Racing", "Fluminense", "Corinthians"].filter((r) => r !== team);
+  const rivals = ["Palmeiras", "Bahia", "Racing", "Fluminense", "Corinthians"].filter(
+    (r) => r !== team,
+  );
   return [
-    { id: "g1", home: team, away: rivals[0], league: "Brasileirão", when: new Date(2026, 10, 1), time: "16:00", tv: "Globo e Premiere" },
-    { id: "g2", home: rivals[1], away: team, league: "Brasileirão", when: new Date(2026, 10, 4), time: "21:30", tv: "Premiere" },
-    { id: "g3", home: team, away: rivals[2], league: "Libertadores", when: new Date(2026, 10, 11), time: "21:00", tv: "Paramount+" },
-    { id: "g4", home: rivals[3], away: team, league: "Brasileirão", when: new Date(2026, 10, 15), time: "18:30", tv: null },
+    {
+      id: "g1",
+      home: team,
+      away: rivals[0],
+      league: "Brasileirão",
+      when: new Date(2026, 10, 1),
+      time: "16:00",
+      tv: "Globo e Premiere",
+    },
+    {
+      id: "g2",
+      home: rivals[1],
+      away: team,
+      league: "Brasileirão",
+      when: new Date(2026, 10, 4),
+      time: "21:30",
+      tv: "Premiere",
+    },
+    {
+      id: "g3",
+      home: team,
+      away: rivals[2],
+      league: "Libertadores",
+      when: new Date(2026, 10, 11),
+      time: "21:00",
+      tv: "Paramount+",
+    },
+    {
+      id: "g4",
+      home: rivals[3],
+      away: team,
+      league: "Brasileirão",
+      when: new Date(2026, 10, 15),
+      time: "18:30",
+      tv: null,
+    },
   ];
 }
 
@@ -339,10 +479,38 @@ export const SUGGESTIONS: {
   meta: string;
   blurb: string;
 }[] = [
-  { id: "s1", title: "O Último Farol", type: "Filmes", badge: "Estreia", meta: "Cinema · Estreia em 26/11", blurb: "Uma faroleira isolada descobre sinais vindos do fundo do mar." },
-  { id: "s2", title: "Cidade Submersa", type: "Séries", badge: "Estreia", meta: "Série no ar · Episódios novos", blurb: "Investigação em uma metrópole que afunda alguns centímetros por ano." },
-  { id: "s3", title: "Dark", type: "Séries", badge: "Para você", meta: "Série · De 2017", blurb: "Parecido com Ruptura." },
-  { id: "s4", title: "A Chegada", type: "Filmes", badge: "Para você", meta: "Filme · De 2016", blurb: "Parecido com Interestelar." },
+  {
+    id: "s1",
+    title: "O Último Farol",
+    type: "Filmes",
+    badge: "Estreia",
+    meta: "Cinema · Estreia em 26/11",
+    blurb: "Uma faroleira isolada descobre sinais vindos do fundo do mar.",
+  },
+  {
+    id: "s2",
+    title: "Cidade Submersa",
+    type: "Séries",
+    badge: "Estreia",
+    meta: "Série no ar · Episódios novos",
+    blurb: "Investigação em uma metrópole que afunda alguns centímetros por ano.",
+  },
+  {
+    id: "s3",
+    title: "Dark",
+    type: "Séries",
+    badge: "Para você",
+    meta: "Série · De 2017",
+    blurb: "Parecido com Ruptura.",
+  },
+  {
+    id: "s4",
+    title: "A Chegada",
+    type: "Filmes",
+    badge: "Para você",
+    meta: "Filme · De 2016",
+    blurb: "Parecido com Interestelar.",
+  },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -350,8 +518,14 @@ export const SUGGESTIONS: {
 /* ------------------------------------------------------------------ */
 
 export const PRESET_TOPICS = [
-  "Tecnologia", "Inteligência artificial", "Ciência", "Games",
-  "Futebol", "Filmes e séries", "Economia", "Startups",
+  "Tecnologia",
+  "Inteligência artificial",
+  "Ciência",
+  "Games",
+  "Futebol",
+  "Filmes e séries",
+  "Economia",
+  "Startups",
 ];
 export const MAX_TOPICS = 8;
 
@@ -366,16 +540,34 @@ const NEWS: Record<string, string[]> = {
     "Universidades lançam guia para uso de IA em trabalhos",
     "Empresas brasileiras testam assistentes para atendimento",
   ],
-  Ciência: ["Telescópio registra a galáxia mais distante já vista", "Pesquisa brasileira avança em vacina contra dengue"],
-  Games: ["Lançamentos de novembro: confira a lista", "Torneio nacional de e-sports bate recorde de público"],
-  Futebol: ["Rodada decisiva mexe na briga pelo título", "Seleção divulga convocados para amistosos"],
-  "Filmes e séries": ["Festival do Rio divulga os vencedores", "Séries mais vistas da semana no streaming"],
+  Ciência: [
+    "Telescópio registra a galáxia mais distante já vista",
+    "Pesquisa brasileira avança em vacina contra dengue",
+  ],
+  Games: [
+    "Lançamentos de novembro: confira a lista",
+    "Torneio nacional de e-sports bate recorde de público",
+  ],
+  Futebol: [
+    "Rodada decisiva mexe na briga pelo título",
+    "Seleção divulga convocados para amistosos",
+  ],
+  "Filmes e séries": [
+    "Festival do Rio divulga os vencedores",
+    "Séries mais vistas da semana no streaming",
+  ],
   Economia: ["Inflação de outubro fica abaixo do esperado", "Dólar fecha a semana em queda"],
-  Startups: ["Startups de saúde lideram investimentos no trimestre", "Programa público abre vagas para aceleração"],
+  Startups: [
+    "Startups de saúde lideram investimentos no trimestre",
+    "Programa público abre vagas para aceleração",
+  ],
 };
 
 export function newsFor(topic: string) {
-  const heads = NEWS[topic] ?? [`${topic}: o que mudou nesta semana`, `Especialistas comentam as novidades sobre ${topic}`];
+  const heads = NEWS[topic] ?? [
+    `${topic}: o que mudou nesta semana`,
+    `Especialistas comentam as novidades sobre ${topic}`,
+  ];
   return heads.slice(0, 3).map((h, i) => ({
     id: `${topic}-${i}`,
     topic,
@@ -400,7 +592,9 @@ export function validateClaudeKey(key: string) {
 export function validateTmdbKey(key: string) {
   const k = key.trim();
   if (!k) return null;
-  return /^[a-zA-Z0-9]{32}$/.test(k) ? null : "Use a 'Chave da API' (32 letras e números), não o token";
+  return /^[a-zA-Z0-9]{32}$/.test(k)
+    ? null
+    : "Use a 'Chave da API' (32 letras e números), não o token";
 }
 
 /* ------------------------------------------------------------------ */
@@ -448,54 +642,365 @@ export type CentralState = {
 function createInitialState(): CentralState {
   return {
     bills: [
-      { id: "b1", name: "Internet 1", amount: 99, dueDay: 19, fine: 2, interest: 1, recurring: true, notes: "", openDue: "2026-10-19" },
-      { id: "b2", name: "Faculdade", amount: null, dueDay: 29, fine: 2, interest: 1, recurring: true, notes: "Valor muda com as matérias do semestre.", openDue: "2026-10-29" },
-      { id: "b3", name: "Internet 2", amount: 99, dueDay: 1, fine: 2, interest: 1, recurring: true, notes: "", openDue: "2026-11-01" },
-      { id: "b4", name: "Academia", amount: 120, dueDay: 15, fine: 0, interest: 0, recurring: true, notes: "", openDue: "2026-11-15" },
-      { id: "b5", name: "IPVA 2026", amount: 412.3, dueDay: 20, fine: 0.33, interest: 1, recurring: false, notes: "Última parcela.", openDue: null },
+      {
+        id: "b1",
+        name: "Internet 1",
+        amount: 99,
+        dueDay: 19,
+        fine: 2,
+        interest: 1,
+        recurring: true,
+        notes: "",
+        openDue: "2026-10-19",
+      },
+      {
+        id: "b2",
+        name: "Faculdade",
+        amount: null,
+        dueDay: 29,
+        fine: 2,
+        interest: 1,
+        recurring: true,
+        notes: "Valor muda com as matérias do semestre.",
+        openDue: "2026-10-29",
+      },
+      {
+        id: "b3",
+        name: "Internet 2",
+        amount: 99,
+        dueDay: 1,
+        fine: 2,
+        interest: 1,
+        recurring: true,
+        notes: "",
+        openDue: "2026-11-01",
+      },
+      {
+        id: "b4",
+        name: "Academia",
+        amount: 120,
+        dueDay: 15,
+        fine: 0,
+        interest: 0,
+        recurring: true,
+        notes: "",
+        openDue: "2026-11-15",
+      },
+      {
+        id: "b5",
+        name: "IPVA 2026",
+        amount: 412.3,
+        dueDay: 20,
+        fine: 0.33,
+        interest: 1,
+        recurring: false,
+        notes: "Última parcela.",
+        openDue: null,
+      },
     ],
     history: [
-      { id: "h1", billId: "b5", name: "IPVA 2026", paidAt: "2026-10-20", due: "2026-10-20", amount: 412.3, charges: 0 },
-      { id: "h2", billId: "b4", name: "Academia", paidAt: "2026-10-14", due: "2026-10-15", amount: 120, charges: 0 },
-      { id: "h3", billId: "b3", name: "Internet 2", paidAt: "2026-10-01", due: "2026-10-01", amount: 99, charges: 0 },
-      { id: "h4", billId: "b2", name: "Faculdade", paidAt: "2026-09-28", due: "2026-09-29", amount: 1250, charges: 0 },
-      { id: "h5", billId: "b1", name: "Internet 1", paidAt: "2026-09-18", due: "2026-09-19", amount: 99, charges: 0 },
-      { id: "h6", billId: "b4", name: "Academia", paidAt: "2026-09-15", due: "2026-09-15", amount: 120, charges: 0 },
-      { id: "h7", billId: "b3", name: "Internet 2", paidAt: "2026-08-31", due: "2026-09-01", amount: 99, charges: 0 },
-      { id: "h8", billId: "b2", name: "Faculdade", paidAt: "2026-08-29", due: "2026-08-29", amount: 1250, charges: 0 },
-      { id: "h9", billId: "b1", name: "Internet 1", paidAt: "2026-08-22", due: "2026-08-19", amount: 101.08, charges: 2.08 },
+      {
+        id: "h1",
+        billId: "b5",
+        name: "IPVA 2026",
+        paidAt: "2026-10-20",
+        due: "2026-10-20",
+        amount: 412.3,
+        charges: 0,
+      },
+      {
+        id: "h2",
+        billId: "b4",
+        name: "Academia",
+        paidAt: "2026-10-14",
+        due: "2026-10-15",
+        amount: 120,
+        charges: 0,
+      },
+      {
+        id: "h3",
+        billId: "b3",
+        name: "Internet 2",
+        paidAt: "2026-10-01",
+        due: "2026-10-01",
+        amount: 99,
+        charges: 0,
+      },
+      {
+        id: "h4",
+        billId: "b2",
+        name: "Faculdade",
+        paidAt: "2026-09-28",
+        due: "2026-09-29",
+        amount: 1250,
+        charges: 0,
+      },
+      {
+        id: "h5",
+        billId: "b1",
+        name: "Internet 1",
+        paidAt: "2026-09-18",
+        due: "2026-09-19",
+        amount: 99,
+        charges: 0,
+      },
+      {
+        id: "h6",
+        billId: "b4",
+        name: "Academia",
+        paidAt: "2026-09-15",
+        due: "2026-09-15",
+        amount: 120,
+        charges: 0,
+      },
+      {
+        id: "h7",
+        billId: "b3",
+        name: "Internet 2",
+        paidAt: "2026-08-31",
+        due: "2026-09-01",
+        amount: 99,
+        charges: 0,
+      },
+      {
+        id: "h8",
+        billId: "b2",
+        name: "Faculdade",
+        paidAt: "2026-08-29",
+        due: "2026-08-29",
+        amount: 1250,
+        charges: 0,
+      },
+      {
+        id: "h9",
+        billId: "b1",
+        name: "Internet 1",
+        paidAt: "2026-08-22",
+        due: "2026-08-19",
+        amount: 101.08,
+        charges: 2.08,
+      },
     ],
     dates: [
-      { id: "d1", name: "Ana", day: 30, month: 10, year: 1996, kind: "Aniversário", notify: true, notes: "Gosta de livros de fantasia." },
-      { id: "d2", name: "Namoro com a Júlia", day: 29, month: 10, year: 2021, kind: "Comemoração", notify: true, notes: "Reservar o restaurante." },
-      { id: "d3", name: "Pedro", day: 10, month: 11, year: 1999, kind: "Aniversário", notify: true, notes: "" },
-      { id: "d4", name: "Vó Maria", day: 15, month: 1, year: 1948, kind: "Aniversário", notify: false, notes: "Lembrar de ligar cedo." },
-      { id: "d5", name: "Formatura", day: 12, month: 12, year: null, kind: "Outro", notify: true, notes: "" },
+      {
+        id: "d1",
+        name: "Ana",
+        day: 30,
+        month: 10,
+        year: 1996,
+        kind: "Aniversário",
+        notify: true,
+        notes: "Gosta de livros de fantasia.",
+      },
+      {
+        id: "d2",
+        name: "Namoro com a Júlia",
+        day: 29,
+        month: 10,
+        year: 2021,
+        kind: "Comemoração",
+        notify: true,
+        notes: "Reservar o restaurante.",
+      },
+      {
+        id: "d3",
+        name: "Pedro",
+        day: 10,
+        month: 11,
+        year: 1999,
+        kind: "Aniversário",
+        notify: true,
+        notes: "",
+      },
+      {
+        id: "d4",
+        name: "Vó Maria",
+        day: 15,
+        month: 1,
+        year: 1948,
+        kind: "Aniversário",
+        notify: false,
+        notes: "Lembrar de ligar cedo.",
+      },
+      {
+        id: "d5",
+        name: "Formatura",
+        day: 12,
+        month: 12,
+        year: null,
+        kind: "Outro",
+        notify: true,
+        notes: "",
+      },
     ],
     pages: [
-      { id: "p1", title: "Perguntas para o projeto de vendas", kind: "Análise de dados", content: "1. Quais produtos vendem mais por região?\n2. Existe sazonalidade?\n3. Ticket médio por canal.", pinned: true, edited: "2026-10-28" },
-      { id: "p2", title: "Ideia: painel de hábitos com pandas", kind: "Ideia", content: "Juntar os dados do diário e fazer um gráfico semanal.", pinned: true, edited: "2026-10-27" },
-      { id: "p3", title: "Python básico", kind: "Anotação", content: topicPageContent("Python básico"), pinned: false, edited: "2026-10-26", topicId: "m1-1" },
-      { id: "p4", title: "Listas, dicionários e funções", kind: "Anotação", content: topicPageContent("Listas, dicionários e funções"), pinned: false, edited: "2026-10-25", topicId: "m1-2" },
-      { id: "p5", title: "NumPy", kind: "Anotação", content: topicPageContent("NumPy"), pinned: false, edited: "2026-10-24", topicId: "m2-1" },
-      { id: "p6", title: "Resumo: média, mediana e moda", kind: "Anotação", content: "Mediana é melhor quando há valores muito fora da curva.", pinned: false, edited: "2026-10-22" },
-      { id: "p7", title: "Análise: gastos do mês com contas", kind: "Análise de dados", content: "Agosto teve R$ 2,08 de encargos por atraso.", pinned: false, edited: "2026-10-20" },
-      { id: "p8", title: "Ideia: prever atraso de contas", kind: "Ideia", content: "Classificação simples com histórico de pagamentos.", pinned: false, edited: "2026-10-18" },
-      { id: "p9", title: "Consultas SQL úteis", kind: "Anotação", content: "SELECT categoria, SUM(valor) FROM gastos GROUP BY categoria;", pinned: false, edited: "2026-10-15" },
-      { id: "p10", title: "Dataset do IBGE para praticar", kind: "Anotação", content: "Baixar a PNAD contínua e testar limpeza.", pinned: false, edited: "2026-10-12" },
-      { id: "p11", title: "Análise: horas de estudo x notas", kind: "Análise de dados", content: "Correlação de 0,62 nas últimas 8 semanas.", pinned: false, edited: "2026-10-09" },
-      { id: "p12", title: "Ideia: bot que resume artigos", kind: "Ideia", content: "Usar a IA do iPhone para resumir PDFs salvos.", pinned: false, edited: "2026-10-05" },
+      {
+        id: "p1",
+        title: "Perguntas para o projeto de vendas",
+        kind: "Análise de dados",
+        content:
+          "1. Quais produtos vendem mais por região?\n2. Existe sazonalidade?\n3. Ticket médio por canal.",
+        pinned: true,
+        edited: "2026-10-28",
+      },
+      {
+        id: "p2",
+        title: "Ideia: painel de hábitos com pandas",
+        kind: "Ideia",
+        content: "Juntar os dados do diário e fazer um gráfico semanal.",
+        pinned: true,
+        edited: "2026-10-27",
+      },
+      {
+        id: "p3",
+        title: "Python básico",
+        kind: "Anotação",
+        content: topicPageContent("Python básico"),
+        pinned: false,
+        edited: "2026-10-26",
+        topicId: "m1-1",
+      },
+      {
+        id: "p4",
+        title: "Listas, dicionários e funções",
+        kind: "Anotação",
+        content: topicPageContent("Listas, dicionários e funções"),
+        pinned: false,
+        edited: "2026-10-25",
+        topicId: "m1-2",
+      },
+      {
+        id: "p5",
+        title: "NumPy",
+        kind: "Anotação",
+        content: topicPageContent("NumPy"),
+        pinned: false,
+        edited: "2026-10-24",
+        topicId: "m2-1",
+      },
+      {
+        id: "p6",
+        title: "Resumo: média, mediana e moda",
+        kind: "Anotação",
+        content: "Mediana é melhor quando há valores muito fora da curva.",
+        pinned: false,
+        edited: "2026-10-22",
+      },
+      {
+        id: "p7",
+        title: "Análise: gastos do mês com contas",
+        kind: "Análise de dados",
+        content: "Agosto teve R$ 2,08 de encargos por atraso.",
+        pinned: false,
+        edited: "2026-10-20",
+      },
+      {
+        id: "p8",
+        title: "Ideia: prever atraso de contas",
+        kind: "Ideia",
+        content: "Classificação simples com histórico de pagamentos.",
+        pinned: false,
+        edited: "2026-10-18",
+      },
+      {
+        id: "p9",
+        title: "Consultas SQL úteis",
+        kind: "Anotação",
+        content: "SELECT categoria, SUM(valor) FROM gastos GROUP BY categoria;",
+        pinned: false,
+        edited: "2026-10-15",
+      },
+      {
+        id: "p10",
+        title: "Dataset do IBGE para praticar",
+        kind: "Anotação",
+        content: "Baixar a PNAD contínua e testar limpeza.",
+        pinned: false,
+        edited: "2026-10-12",
+      },
+      {
+        id: "p11",
+        title: "Análise: horas de estudo x notas",
+        kind: "Análise de dados",
+        content: "Correlação de 0,62 nas últimas 8 semanas.",
+        pinned: false,
+        edited: "2026-10-09",
+      },
+      {
+        id: "p12",
+        title: "Ideia: bot que resume artigos",
+        kind: "Ideia",
+        content: "Usar a IA do iPhone para resumir PDFs salvos.",
+        pinned: false,
+        edited: "2026-10-05",
+      },
     ],
     trailDone: ["m1-1", "m1-2", "m1-3", "m2-1", "m2-2"],
     leisure: [
-      { id: "l1", title: "The Last of Us Part II", category: "Games", status: "Em andamento", rating: 4, notes: "PS5, capítulo Seattle dia 2." },
-      { id: "l2", title: "The Bear", category: "Séries", status: "Em andamento", rating: 4, notes: "Temporada 3, com a Júlia." },
-      { id: "l3", title: "Duna: Parte Dois", category: "Filmes", status: "Quero ver", rating: 0, notes: "Max" },
-      { id: "l4", title: "Hollow Knight: Silksong", category: "Games", status: "Quero ver", rating: 0, notes: "" },
-      { id: "l5", title: "Final da Libertadores", category: "Futebol", status: "Quero ver", rating: 0, notes: "Juntar a galera." },
-      { id: "l6", title: "Ruptura", category: "Séries", status: "Concluído", rating: 5, notes: "Apple TV+" },
-      { id: "l7", title: "Interestelar", category: "Filmes", status: "Concluído", rating: 5, notes: "" },
-      { id: "l8", title: "Trilha da Pedra Bonita", category: "Outro", status: "Concluído", rating: 4, notes: "Ir cedo." },
+      {
+        id: "l1",
+        title: "The Last of Us Part II",
+        category: "Games",
+        status: "Em andamento",
+        rating: 4,
+        notes: "PS5, capítulo Seattle dia 2.",
+      },
+      {
+        id: "l2",
+        title: "The Bear",
+        category: "Séries",
+        status: "Em andamento",
+        rating: 4,
+        notes: "Temporada 3, com a Júlia.",
+      },
+      {
+        id: "l3",
+        title: "Duna: Parte Dois",
+        category: "Filmes",
+        status: "Quero ver",
+        rating: 0,
+        notes: "Max",
+      },
+      {
+        id: "l4",
+        title: "Hollow Knight: Silksong",
+        category: "Games",
+        status: "Quero ver",
+        rating: 0,
+        notes: "",
+      },
+      {
+        id: "l5",
+        title: "Final da Libertadores",
+        category: "Futebol",
+        status: "Quero ver",
+        rating: 0,
+        notes: "Juntar a galera.",
+      },
+      {
+        id: "l6",
+        title: "Ruptura",
+        category: "Séries",
+        status: "Concluído",
+        rating: 5,
+        notes: "Apple TV+",
+      },
+      {
+        id: "l7",
+        title: "Interestelar",
+        category: "Filmes",
+        status: "Concluído",
+        rating: 5,
+        notes: "",
+      },
+      {
+        id: "l8",
+        title: "Trilha da Pedra Bonita",
+        category: "Outro",
+        status: "Concluído",
+        rating: 4,
+        notes: "Ir cedo.",
+      },
     ],
     settings: {
       reminderHour: 9,
@@ -524,7 +1029,9 @@ const listeners = new Set<() => void>();
 export function getCentral() {
   return state;
 }
-export function setCentral(update: Partial<CentralState> | ((s: CentralState) => Partial<CentralState>)) {
+export function setCentral(
+  update: Partial<CentralState> | ((s: CentralState) => Partial<CentralState>),
+) {
   const patch = typeof update === "function" ? update(state) : update;
   state = { ...state, ...patch };
   listeners.forEach((l) => l());
@@ -534,12 +1041,18 @@ function subscribe(l: () => void) {
   return () => listeners.delete(l);
 }
 export function useCentral() {
-  return useSyncExternalStore(subscribe, () => state, () => serverSnapshot);
+  return useSyncExternalStore(
+    subscribe,
+    () => state,
+    () => serverSnapshot,
+  );
 }
 
-export const uid = (p: string) => `${p}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+export const uid = (p: string) =>
+  `${p}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
 
-export const claudeActive = (s: CentralState) => s.settings.claudeOn && !validateClaudeKey(s.settings.claudeKey);
+export const claudeActive = (s: CentralState) =>
+  s.settings.claudeOn && !validateClaudeKey(s.settings.claudeKey);
 export const iphoneAi = (s: CentralState) => s.ai === "active" || s.ai === "failed";
 
 /* ------------------------------------------------------------------ */
@@ -563,7 +1076,9 @@ export function markBillPaid(id: string) {
   };
   setCentral((s) => ({
     history: [entry, ...s.history],
-    bills: s.bills.map((b) => (b.id === id ? { ...b, openDue: b.recurring ? nextDue(b.openDue!, b.dueDay) : null } : b)),
+    bills: s.bills.map((b) =>
+      b.id === id ? { ...b, openDue: b.recurring ? nextDue(b.openDue!, b.dueDay) : null } : b,
+    ),
   }));
   return () => setCentral(prev);
 }

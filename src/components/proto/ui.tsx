@@ -26,9 +26,9 @@ export function ScreenHeader({
   subtitle,
 }: {
   title: string;
-  back?: "/" | "/areas" | "/areas/estudos" | "/contas";
-  actions?: ReactNode;
-  subtitle?: ReactNode;
+  back?: "/" | "/areas" | "/areas/estudos" | "/contas" | undefined;
+  actions?: ReactNode | undefined;
+  subtitle?: ReactNode | undefined;
 }) {
   return (
     <>
@@ -61,9 +61,9 @@ export function IconButton({
   className,
 }: {
   label: string;
-  onClick?: () => void;
+  onClick?: (() => void) | undefined;
   children: ReactNode;
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <button
@@ -90,11 +90,11 @@ export function PillButton({
   type = "button",
 }: {
   children: ReactNode;
-  onClick?: () => void;
-  variant?: "brand" | "surface" | "danger" | "light";
-  className?: string;
-  disabled?: boolean;
-  type?: "button" | "submit";
+  onClick?: (() => void) | undefined;
+  variant?: "brand" | "surface" | "danger" | "light" | undefined;
+  className?: string | undefined;
+  disabled?: boolean | undefined;
+  type?: "button" | "submit" | undefined;
 }) {
   return (
     <button
@@ -115,9 +115,23 @@ export function PillButton({
   );
 }
 
-export function Tag({ color, children, className }: { color: TagColor; children: ReactNode; className?: string }) {
+export function Tag({
+  color,
+  children,
+  className,
+}: {
+  color: TagColor;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <span className={cn("inline-flex items-center rounded-md px-1.5 py-0.5 text-xs font-semibold", tagClasses[color], className)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded-md px-1.5 py-0.5 text-xs font-semibold",
+        tagClasses[color],
+        className,
+      )}
+    >
       {children}
     </span>
   );
@@ -138,10 +152,10 @@ export function Callout({
   className,
 }: {
   tone: CardTone;
-  title?: ReactNode;
-  children?: ReactNode;
-  icon?: LucideIcon;
-  className?: string;
+  title?: ReactNode | undefined;
+  children?: ReactNode | undefined;
+  icon?: LucideIcon | undefined;
+  className?: string | undefined;
 }) {
   const t = toneMap[tone];
   const Icon = icon ?? t.icon;
@@ -150,7 +164,9 @@ export function Callout({
       <Icon className={cn("mt-0.5 size-5 shrink-0", t.fg)} strokeWidth={2.2} />
       <div className="min-w-0 flex-1">
         {title && <p className="text-[15px] font-bold leading-snug text-foreground">{title}</p>}
-        {children && <div className="mt-0.5 text-sm leading-relaxed text-foreground">{children}</div>}
+        {children && (
+          <div className="mt-0.5 text-sm leading-relaxed text-foreground">{children}</div>
+        )}
       </div>
     </div>
   );
@@ -165,7 +181,7 @@ export function ChipRow<T extends string>({
   options: readonly T[];
   value: T;
   onChange: (v: T) => void;
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <div className={cn("no-scrollbar flex gap-2 overflow-x-auto px-5", className)}>
@@ -178,7 +194,15 @@ export function ChipRow<T extends string>({
   );
 }
 
-export function Chip({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
+export function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
   return (
     <button
       type="button"
@@ -186,7 +210,9 @@ export function Chip({ active, onClick, children }: { active: boolean; onClick: 
       aria-pressed={active}
       className={cn(
         "shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors",
-        active ? "bg-brand text-brand-foreground" : "bg-surface text-foreground active:bg-surface-strong",
+        active
+          ? "bg-brand text-brand-foreground"
+          : "bg-surface text-foreground active:bg-surface-strong",
       )}
     >
       {children}
@@ -203,11 +229,11 @@ export function SourceLine({
   className,
 }: {
   text: ReactNode;
-  loading?: boolean;
-  loadingText?: string;
-  onRefresh?: () => void;
-  refreshLabel?: string;
-  className?: string;
+  loading?: boolean | undefined;
+  loadingText?: string | undefined;
+  onRefresh?: (() => void) | undefined;
+  refreshLabel?: string | undefined;
+  className?: string | undefined;
 }) {
   return (
     <div className={cn("flex items-center justify-between gap-2", className)}>
@@ -217,7 +243,11 @@ export function SourceLine({
         <p className="text-xs font-medium text-muted-foreground">{text}</p>
       )}
       {onRefresh && (
-        <IconButton label={refreshLabel} onClick={onRefresh} className="size-8 text-muted-foreground">
+        <IconButton
+          label={refreshLabel}
+          onClick={onRefresh}
+          className="size-8 text-muted-foreground"
+        >
           <RotateCw className={cn("size-4", loading && "animate-spin")} />
         </IconButton>
       )}
@@ -234,7 +264,15 @@ export function Loading({ text, className }: { text: string; className?: string 
   );
 }
 
-export function EmptyState({ icon: Icon, title, text }: { icon: LucideIcon; title: string; text: string }) {
+export function EmptyState({
+  icon: Icon,
+  title,
+  text,
+}: {
+  icon: LucideIcon;
+  title: string;
+  text: string;
+}) {
   return (
     <div className="flex flex-col items-center px-10 py-14 text-center">
       <span className="flex size-16 items-center justify-center rounded-full bg-surface">
@@ -263,7 +301,11 @@ export function Fab({ label, onClick }: { label: string; onClick: () => void }) 
 
 /** Aviso no rodapé. Some em 5 s e deixa espaço para o botão +. */
 export function useSnackbar() {
-  const [snack, setSnack] = useState<{ id: number; text: string; undo?: () => void } | null>(null);
+  const [snack, setSnack] = useState<{
+    id: number;
+    text: string;
+    undo?: (() => void) | undefined;
+  } | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const show = useCallback((text: string, undo?: () => void) => {
@@ -271,9 +313,12 @@ export function useSnackbar() {
     setSnack({ id: Date.now(), text, undo });
     timer.current = setTimeout(() => setSnack(null), 5000);
   }, []);
-  useEffect(() => () => {
-    if (timer.current) clearTimeout(timer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (timer.current) clearTimeout(timer.current);
+    },
+    [],
+  );
 
   const node = snack ? (
     <div
@@ -311,13 +356,17 @@ export function ConfirmDialog({
   title: string;
   text: string;
   action: string;
-  danger?: boolean;
+  danger?: boolean | undefined;
   onCancel: () => void;
   onConfirm: () => void;
 }) {
   return (
     <div className="absolute inset-0 z-[45] flex items-center justify-center bg-overlay p-7 animate-in fade-in duration-150">
-      <div role="alertdialog" aria-label={title} className="w-full rounded-3xl bg-background p-6 shadow-phone animate-in zoom-in-95 duration-150">
+      <div
+        role="alertdialog"
+        aria-label={title}
+        className="w-full rounded-3xl bg-background p-6 shadow-phone animate-in zoom-in-95 duration-150"
+      >
         <p className="text-[19px] font-bold leading-snug">{title}</p>
         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
         <div className="mt-6 flex gap-2">
@@ -344,7 +393,7 @@ export function FormSheet({
   title: string;
   onClose: () => void;
   onSave: () => void;
-  extraActions?: ReactNode;
+  extraActions?: ReactNode | undefined;
   children: ReactNode;
 }) {
   return (
@@ -365,7 +414,9 @@ export function FormSheet({
         </div>
       </div>
       <div className="no-scrollbar flex-1 overflow-y-auto px-5 pb-10">
-        <h1 className="pb-4 text-[28px] font-bold leading-tight tracking-tight">{title}</h1>
+        {title && (
+          <h1 className="pb-4 text-[28px] font-bold leading-tight tracking-tight">{title}</h1>
+        )}
         {children}
       </div>
     </div>
@@ -391,14 +442,14 @@ export function Field({
   label: string;
   value: string;
   onChange: (v: string) => void;
-  placeholder?: string;
-  helper?: string;
-  error?: string | null;
-  prefix?: string;
-  suffix?: string;
-  inputMode?: "text" | "decimal" | "numeric";
-  multiline?: boolean;
-  rows?: number;
+  placeholder?: string | undefined;
+  helper?: string | undefined;
+  error?: string | null | undefined;
+  prefix?: string | undefined;
+  suffix?: string | undefined;
+  inputMode?: "text" | "decimal" | "numeric" | undefined;
+  multiline?: boolean | undefined;
+  rows?: number | undefined;
 }) {
   return (
     <label className="block">
@@ -415,7 +466,11 @@ export function Field({
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             rows={rows}
-            className={cn(inputCls, "resize-none leading-relaxed", error && "ring-2 ring-destructive")}
+            className={cn(
+              inputCls,
+              "resize-none leading-relaxed",
+              error && "ring-2 ring-destructive",
+            )}
           />
         ) : (
           <input
@@ -423,7 +478,12 @@ export function Field({
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
             inputMode={inputMode}
-            className={cn(inputCls, prefix && "pl-11", suffix && "pr-10", error && "ring-2 ring-destructive")}
+            className={cn(
+              inputCls,
+              prefix && "pl-11",
+              suffix && "pr-10",
+              error && "ring-2 ring-destructive",
+            )}
           />
         )}
         {suffix && (
@@ -453,9 +513,9 @@ export function SecureField({
   label: string;
   value: string;
   onChange: (v: string) => void;
-  helper?: string;
-  error?: string | null;
-  placeholder?: string;
+  helper?: string | undefined;
+  error?: string | null | undefined;
+  placeholder?: string | undefined;
 }) {
   const [pasteNote, setPasteNote] = useState<string | null>(null);
   const paste = async () => {
@@ -495,7 +555,9 @@ export function SecureField({
       {error ? (
         <span className="mt-1.5 block text-xs font-medium text-destructive">{error}</span>
       ) : (
-        (pasteNote || helper) && <span className="mt-1.5 block text-xs text-muted-foreground">{pasteNote ?? helper}</span>
+        (pasteNote || helper) && (
+          <span className="mt-1.5 block text-xs text-muted-foreground">{pasteNote ?? helper}</span>
+        )
       )}
     </div>
   );
@@ -508,7 +570,7 @@ export function ToggleRow({
   onChange,
 }: {
   label: string;
-  helper?: string;
+  helper?: string | undefined;
   checked: boolean;
   onChange: (v: boolean) => void;
 }) {
@@ -522,7 +584,11 @@ export function ToggleRow({
     >
       <span className="flex-1">
         <span className="block text-[15px] font-semibold">{label}</span>
-        {helper && <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{helper}</span>}
+        {helper && (
+          <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
+            {helper}
+          </span>
+        )}
       </span>
       <span
         className={cn(
@@ -541,7 +607,15 @@ export function ToggleRow({
   );
 }
 
-export function Stars({ value, onChange, size = "sm" }: { value: number; onChange?: (v: number) => void; size?: "sm" | "lg" }) {
+export function Stars({
+  value,
+  onChange,
+  size = "sm",
+}: {
+  value: number;
+  onChange?: (v: number) => void;
+  size?: "sm" | "lg";
+}) {
   return (
     <span className="inline-flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((n) => {
@@ -549,13 +623,21 @@ export function Stars({ value, onChange, size = "sm" }: { value: number; onChang
           <Star
             className={cn(
               size === "lg" ? "size-8" : "size-3.5",
-              n <= value ? "fill-tag-yellow-foreground text-tag-yellow-foreground" : "text-surface-strong",
+              n <= value
+                ? "fill-tag-yellow-foreground text-tag-yellow-foreground"
+                : "text-surface-strong",
             )}
             strokeWidth={size === "lg" ? 1.6 : 2}
           />
         );
         return onChange ? (
-          <button key={n} type="button" aria-label={`${n} estrela${n > 1 ? "s" : ""}`} onClick={() => onChange(n === value ? 0 : n)} className="p-0.5">
+          <button
+            key={n}
+            type="button"
+            aria-label={`${n} estrela${n > 1 ? "s" : ""}`}
+            onClick={() => onChange(n === value ? 0 : n)}
+            className="p-0.5"
+          >
             {icon}
           </button>
         ) : (
@@ -566,7 +648,15 @@ export function Stars({ value, onChange, size = "sm" }: { value: number; onChang
   );
 }
 
-export function SectionTitle({ children, right, className }: { children: ReactNode; right?: ReactNode; className?: string }) {
+export function SectionTitle({
+  children,
+  right,
+  className,
+}: {
+  children: ReactNode;
+  right?: ReactNode;
+  className?: string;
+}) {
   return (
     <div className={cn("flex items-center justify-between px-5", className)}>
       <h2 className="text-[17px] font-bold">{children}</h2>
