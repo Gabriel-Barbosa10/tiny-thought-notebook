@@ -26,9 +26,9 @@ export function ScreenHeader({
   subtitle,
 }: {
   title: string;
-  back?: "/" | "/areas" | "/areas/estudos" | "/contas";
-  actions?: ReactNode;
-  subtitle?: ReactNode;
+  back?: "/" | "/areas" | "/areas/estudos" | "/contas" | undefined;
+  actions?: ReactNode | undefined;
+  subtitle?: ReactNode | undefined;
 }) {
   return (
     <>
@@ -61,9 +61,9 @@ export function IconButton({
   className,
 }: {
   label: string;
-  onClick?: () => void;
+  onClick?: (() => void) | undefined;
   children: ReactNode;
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <button
@@ -90,11 +90,11 @@ export function PillButton({
   type = "button",
 }: {
   children: ReactNode;
-  onClick?: () => void;
-  variant?: "brand" | "surface" | "danger" | "light";
-  className?: string;
-  disabled?: boolean;
-  type?: "button" | "submit";
+  onClick?: (() => void) | undefined;
+  variant?: "brand" | "surface" | "danger" | "light" | undefined;
+  className?: string | undefined;
+  disabled?: boolean | undefined;
+  type?: "button" | "submit" | undefined;
 }) {
   return (
     <button
@@ -138,10 +138,10 @@ export function Callout({
   className,
 }: {
   tone: CardTone;
-  title?: ReactNode;
-  children?: ReactNode;
-  icon?: LucideIcon;
-  className?: string;
+  title?: ReactNode | undefined;
+  children?: ReactNode | undefined;
+  icon?: LucideIcon | undefined;
+  className?: string | undefined;
 }) {
   const t = toneMap[tone];
   const Icon = icon ?? t.icon;
@@ -165,7 +165,7 @@ export function ChipRow<T extends string>({
   options: readonly T[];
   value: T;
   onChange: (v: T) => void;
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <div className={cn("no-scrollbar flex gap-2 overflow-x-auto px-5", className)}>
@@ -203,11 +203,11 @@ export function SourceLine({
   className,
 }: {
   text: ReactNode;
-  loading?: boolean;
-  loadingText?: string;
-  onRefresh?: () => void;
-  refreshLabel?: string;
-  className?: string;
+  loading?: boolean | undefined;
+  loadingText?: string | undefined;
+  onRefresh?: (() => void) | undefined;
+  refreshLabel?: string | undefined;
+  className?: string | undefined;
 }) {
   return (
     <div className={cn("flex items-center justify-between gap-2", className)}>
@@ -311,7 +311,7 @@ export function ConfirmDialog({
   title: string;
   text: string;
   action: string;
-  danger?: boolean;
+  danger?: boolean | undefined;
   onCancel: () => void;
   onConfirm: () => void;
 }) {
@@ -344,7 +344,7 @@ export function FormSheet({
   title: string;
   onClose: () => void;
   onSave: () => void;
-  extraActions?: ReactNode;
+  extraActions?: ReactNode | undefined;
   children: ReactNode;
 }) {
   return (
@@ -391,14 +391,14 @@ export function Field({
   label: string;
   value: string;
   onChange: (v: string) => void;
-  placeholder?: string;
-  helper?: string;
-  error?: string | null;
-  prefix?: string;
-  suffix?: string;
-  inputMode?: "text" | "decimal" | "numeric";
-  multiline?: boolean;
-  rows?: number;
+  placeholder?: string | undefined;
+  helper?: string | undefined;
+  error?: string | null | undefined;
+  prefix?: string | undefined;
+  suffix?: string | undefined;
+  inputMode?: "text" | "decimal" | "numeric" | undefined;
+  multiline?: boolean | undefined;
+  rows?: number | undefined;
 }) {
   return (
     <label className="block">
@@ -453,9 +453,9 @@ export function SecureField({
   label: string;
   value: string;
   onChange: (v: string) => void;
-  helper?: string;
-  error?: string | null;
-  placeholder?: string;
+  helper?: string | undefined;
+  error?: string | null | undefined;
+  placeholder?: string | undefined;
 }) {
   const [pasteNote, setPasteNote] = useState<string | null>(null);
   const paste = async () => {
@@ -508,7 +508,7 @@ export function ToggleRow({
   onChange,
 }: {
   label: string;
-  helper?: string;
+  helper?: string | undefined;
   checked: boolean;
   onChange: (v: boolean) => void;
 }) {

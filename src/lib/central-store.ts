@@ -14,7 +14,7 @@ const DAY_MS = 86_400_000;
 const pad = (n: number) => String(n).padStart(2, "0");
 
 export function parseISO(iso: string) {
-  const [y, m, d] = iso.split("-").map(Number);
+  const [y = 1970, m = 1, d = 1] = iso.split("-").map(Number);
   return new Date(y, m - 1, d);
 }
 export function toISO(date: Date) {
@@ -40,8 +40,8 @@ export const WEEKDAYS_SHORT = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
 export const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
 export function monthLabel(d: Date) {
-  const m = MONTHS[d.getMonth()];
-  return `${m[0].toUpperCase()}${m.slice(1)} de ${d.getFullYear()}`;
+  const m = MONTHS[d.getMonth()] ?? "";
+  return `${m.charAt(0).toUpperCase()}${m.slice(1)} de ${d.getFullYear()}`;
 }
 
 const brl = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });

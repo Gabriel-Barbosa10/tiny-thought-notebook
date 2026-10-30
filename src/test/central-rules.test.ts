@@ -28,12 +28,12 @@ describe("Contas", () => {
   });
 
   it("etiquetas: atrasada, vence hoje, amanhã, em N dias, pendente, sem fatura e valor a definir", () => {
-    expect(billStatus(bill({}), today).tags[0].label).toBe("Atrasada · 10 dias");
-    expect(billStatus(bill({ openDue: "2026-10-29" }), today).tags[0].label).toBe("Vence hoje");
-    expect(billStatus(bill({ openDue: "2026-10-30" }), today).tags[0].label).toBe("Amanhã");
-    expect(billStatus(bill({ openDue: "2026-11-03" }), today).tags[0].label).toBe("Em 5 dias");
-    expect(billStatus(bill({ openDue: "2026-11-15" }), today).tags[0].label).toBe("Pendente");
-    expect(billStatus(bill({ openDue: null }), today).tags[0].label).toBe("Sem fatura em aberto");
+    expect(billStatus(bill({}), today).tags[0]?.label).toBe("Atrasada · 10 dias");
+    expect(billStatus(bill({ openDue: "2026-10-29" }), today).tags[0]?.label).toBe("Vence hoje");
+    expect(billStatus(bill({ openDue: "2026-10-30" }), today).tags[0]?.label).toBe("Amanhã");
+    expect(billStatus(bill({ openDue: "2026-11-03" }), today).tags[0]?.label).toBe("Em 5 dias");
+    expect(billStatus(bill({ openDue: "2026-11-15" }), today).tags[0]?.label).toBe("Pendente");
+    expect(billStatus(bill({ openDue: null }), today).tags[0]?.label).toBe("Sem fatura em aberto");
     expect(billStatus(bill({ amount: null }), today).tags.map((t) => t.label)).toContain("Valor a definir");
   });
 
@@ -50,7 +50,7 @@ describe("Briefing", () => {
     );
     expect(cards.map((c) => c.tone)).toEqual(["alert", "attention", "info"]);
     const ok = buildBriefing([bill({ openDue: "2026-11-08" })], today);
-    expect(ok[0].title).toBe("Nenhuma conta atrasada");
+    expect(ok[0]?.title).toBe("Nenhuma conta atrasada");
   });
 });
 

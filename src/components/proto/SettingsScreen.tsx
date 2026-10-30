@@ -32,7 +32,7 @@ export function SettingsScreen() {
   const [jarvisName, setJarvisName] = useState(s.settings.jarvisName);
   const [claudeOn, setClaudeOn] = useState(s.settings.claudeOn);
   const [claudeKey, setClaudeKey] = useState(s.settings.claudeKey);
-  const [errors, setErrors] = useState<Record<string, string | null>>({});
+  const [errors, setErrors] = useState<Partial<Record<"hour" | "days" | "tmdb" | "claude", string | null>>>({});
 
   const toggleTopic = (t: string) => {
     setTopicError(null);
@@ -52,7 +52,7 @@ export function SettingsScreen() {
   const save = () => {
     const h = Number(hour);
     const d = Number(days);
-    const e: Record<string, string | null> = {
+    const e: Record<"hour" | "days" | "tmdb" | "claude", string | null> = {
       hour: !/^\d{1,2}$/.test(hour) || h > 23 ? "Informe uma hora de 0 a 23" : null,
       days: !/^\d$/.test(days) || d > 7 ? "Informe de 0 a 7 dias" : null,
       tmdb: validateTmdbKey(tmdb),

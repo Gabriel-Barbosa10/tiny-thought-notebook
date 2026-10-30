@@ -120,11 +120,11 @@ function BillForm({ bill, onClose }: { bill: Bill | null; onClose: () => void })
   const [interest, setInterest] = useState(bill ? toInputDecimal(bill.interest) : "1");
   const [recurring, setRecurring] = useState(bill?.recurring ?? true);
   const [notes, setNotes] = useState(bill?.notes ?? "");
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<Partial<Record<"name" | "amount" | "day" | "fine" | "interest", string>>>({});
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const save = () => {
-    const e: Record<string, string> = {};
+    const e: Partial<Record<"name" | "amount" | "day" | "fine" | "interest", string>> = {};
     if (!name.trim()) e.name = "Informe o nome da conta";
     const a = parseDecimal(amount);
     if (Number.isNaN(a)) e.amount = "Valor inválido. Exemplo: 99,90";
