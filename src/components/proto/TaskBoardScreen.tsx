@@ -67,8 +67,8 @@ export function TaskBoardScreen() {
       {/* Topo */}
       <header className="sticky top-0 z-10 flex items-center justify-between bg-background/95 px-3 py-2 backdrop-blur">
         <Link
-          to="/"
-          aria-label="Voltar para o início"
+          to="/areas"
+          aria-label="Voltar para Áreas"
           className="flex size-10 items-center justify-center rounded-full text-foreground hover:bg-surface"
         >
           <ChevronLeft className="size-6" />

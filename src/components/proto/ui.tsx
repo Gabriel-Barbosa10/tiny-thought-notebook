@@ -365,7 +365,7 @@ export function FormSheet({
         </div>
       </div>
       <div className="no-scrollbar flex-1 overflow-y-auto px-5 pb-10">
-        <h1 className="pb-4 text-[28px] font-bold leading-tight tracking-tight">{title}</h1>
+        {title && <h1 className="pb-4 text-[28px] font-bold leading-tight tracking-tight">{title}</h1>}
         {children}
       </div>
     </div>

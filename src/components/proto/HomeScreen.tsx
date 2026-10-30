@@ -19,7 +19,6 @@ import {
 import { cn } from "@/lib/utils";
 import { MurdockAppIcon } from "@/components/proto/MurdockLogo";
 import {
-  AI_UNAVAILABLE_REASON,
   TODAY,
   UPDATED_AT,
   WEEKDAYS,
@@ -295,9 +294,6 @@ function NewsSection() {
               </p>
             </a>
           ))
-        )}
-        {!loading && s.ai !== "active" && s.ai !== "failed" && !hasClaude && (
-          <span className="sr-only">{AI_UNAVAILABLE_REASON[s.ai]}</span>
         )}
       </div>
     </section>

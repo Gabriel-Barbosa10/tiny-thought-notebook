@@ -19,7 +19,7 @@ import {
   useCentral,
   type Bill,
 } from "@/lib/central-store";
-import { ConfirmDialog, EmptyState, Fab, Field, FormSheet, IconButton, ScreenHeader, Tag, ToggleRow, useSnackbar } from "@/components/proto/ui";
+import { ConfirmDialog, EmptyState, Fab, Field, FormSheet, ScreenHeader, Tag, ToggleRow, useSnackbar } from "@/components/proto/ui";
 
 export function BillsScreen() {
   const { bills } = useCentral();
@@ -232,4 +232,3 @@ function BillForm({ bill, onClose }: { bill: Bill | null; onClose: () => void })
   );
 }
 
-export { IconButton };

@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Check, Clapperboard, Gamepad2, ListPlus, Play, Trash2, Trophy, Tv } from "lucide-react";
+import { Check, Clapperboard, Gamepad2, ListPlus, Play, Trash2, Tv } from "lucide-react";
 
 import {
   KNOWN_TEAMS,
@@ -233,8 +233,7 @@ function MoviesSection({ filter, onAdded }: { filter: "Filmes" | "Séries" | nul
             })}
           </ul>
         )}
-        <p className="mt-3 flex items-start gap-2 text-[11px] leading-relaxed text-muted-foreground">
-          <Trophy className="mt-0.5 size-3 shrink-0 opacity-0" aria-hidden />
+        <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
           Dados de filmes e séries do TMDB. Este app usa a API do TMDB, mas não é endossado nem certificado pelo TMDB.
         </p>
       </div>
@@ -327,4 +326,3 @@ export function ChipGroup<T extends string>({
   );
 }
 
-export const _unused = useMemo;

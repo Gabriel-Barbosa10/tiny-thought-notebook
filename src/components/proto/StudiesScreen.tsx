@@ -147,7 +147,7 @@ export function PageEditor({ page, onClose }: { page: StudyPage | null; onClose:
           setError(null);
         }}
         placeholder="Sem título"
-        className="-mt-4 w-full bg-transparent text-[28px] font-bold leading-tight tracking-tight outline-none placeholder:text-surface-strong"
+        className="w-full bg-transparent text-[28px] font-bold leading-tight tracking-tight outline-none placeholder:text-surface-strong"
       />
       {error && <p className="mt-1 text-xs font-medium text-destructive">{error}</p>}
       <div className="mt-4 flex flex-wrap gap-2">
