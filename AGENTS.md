@@ -11,4 +11,6 @@
 
 ## Project rules
 - Prototype screens live in `src/components/proto/` and are wrapped by `PhoneShell` per route; sheets/overlays use `absolute` positioning anchored to the phone frame (the scroll area stays unpositioned) so they stay inside the device mockup on desktop.
-- Mock data for the prototype lives in `src/lib/proto-data.ts`; no backend yet, state is local to each screen.
+- Mock data for the prototype lives in `src/lib/proto-data.ts` (tasks) and `src/lib/central-store.ts` (contas, histórico, datas, estudos, lazer, settings, lock state); no backend. `central-store` is an in-memory store shared across screens via `useSyncExternalStore` so actions (e.g. marking a bill paid) show on every tab; it resets on reload.
+- Business rules (bill charges/status, briefing order, key/date validation) live as pure functions in `central-store.ts` and are covered by `src/test/central-rules.test.ts`.
+- The lock screen and privacy cover render inside `PhoneShell`; while locked, screen content and its overlays are not mounted at all.
