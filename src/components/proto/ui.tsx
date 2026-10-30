@@ -263,7 +263,7 @@ export function Fab({ label, onClick }: { label: string; onClick: () => void }) 
 
 /** Aviso no rodapé. Some em 5 s e deixa espaço para o botão +. */
 export function useSnackbar() {
-  const [snack, setSnack] = useState<{ id: number; text: string; undo?: () => void } | null>(null);
+  const [snack, setSnack] = useState<{ id: number; text: string; undo?: (() => void) | undefined } | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const show = useCallback((text: string, undo?: () => void) => {
